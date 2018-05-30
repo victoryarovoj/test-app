@@ -5,7 +5,7 @@ import Uploader from './Uploader';
 class App extends Component {
 	render() {
 		return (
-			<div align="center">
+			<div>
 				<Header />
 			    <Uploader />
 			</div>

@@ -207,16 +207,32 @@ class Uploader extends React.Component {
           <div className="container">
             <div className="row">
               <div className="col-4">
+              <div className="card">
+                <div className="card-header">
+                  Options
+                </div>
+                <div className="card-body">
+                  <div className="col-6">
+                      <label><input type="checkbox" /> Option 1</label>
+                      <label><input type="checkbox" /> Option 2</label>
+                      <label><input type="checkbox" /> Option 3</label>
+                  </div>
+                  </div>
+                 </div>
               </div>
               <div className="col-8">
-                <div className="jumbotron">
-                  <form className="col-10" onSubmit={this.onFormSubmit}>
-                      <input type="file" onChange={this.onChange} />
-                  </form>
-                    <div className="col-8">
-                      <button onClick={this.createSession.bind(this)}>Upload</button>
-                    </div>
+                <div className="card">
+                  <div className="card-header">
+                    File
                   </div>
+                  <div className="card-body">
+                    <div className="col-10">
+                        <h5 className="card-title">File for create digital stamp</h5>
+                        <input type="file" onChange={this.onChange} />
+                        <button onClick={this.createSession.bind(this)}>Upload</button>
+                    </div>
+                    </div>
+                   </div>
                   <button type="button" onClick={this.getStatus.bind(this)}>getStatus</button>
                   <button onClick={this.getFeatures.bind(this)}>getFeatures</button>
                   
