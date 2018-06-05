@@ -8,7 +8,9 @@ class Uploader extends React.Component {
     this.state = {
       file: null,
       uuid: null,
-      baseUrl: "https://local.cipher.kiev.ua:9091/api/v1/ticket/"
+      baseUrl: "https://local.cipher.kiev.ua:9091/api/v1/ticket/",
+      fileName: null,
+      blobData: null
     }
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -32,6 +34,7 @@ class Uploader extends React.Component {
 
   onChange(e) {
     this.setState({file:e.target.files[0]});
+    this.setState({fileName: e.target.files[0].name});
   }
 
 
@@ -52,8 +55,6 @@ class Uploader extends React.Component {
 
   sendData(){
     var url, dsData;
-    var formData = new FormData();
-    formData.append('uploadTicketData', this.state.file);
     url = this.state.baseUrl + this.state.uuid + "/data"
 
     var xhr = new XMLHttpRequest();
@@ -66,7 +67,7 @@ class Uploader extends React.Component {
           console.log(dsData);
         }
     };
-    xhr.send('uploadTicketData': formData);
+    xhr.send(this.state.file);
     this.setMetaData();
   }
 
@@ -75,9 +76,12 @@ class Uploader extends React.Component {
 
     url = this.state.baseUrl + this.state.uuid + "/metadata"
       return fetch(url, {
-        method: 'PUT',
-        dataType: "json",
-        data: JSON.stringify({metaData: "testData"})
+        method: 'put',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({metaData: this.state.fileName})
       }).then((response) => {
         response.json().then((response) => {
           console.log(response);
@@ -134,9 +138,10 @@ class Uploader extends React.Component {
   }
 
   getDSData(){
-    var url, message, deleteSession;
+    var url, message, deleteSession, setBlobData, localThis;
 
     url = this.state.baseUrl + this.state.uuid;
+    localThis = this;
 
     deleteSession = function() {
         return fetch(url, {
@@ -150,6 +155,12 @@ class Uploader extends React.Component {
       });
     }
 
+    setBlobData = function(data) {
+      // return this.setState({blobData:data});
+      localThis.setState({blobData:data});
+
+    }
+
     var xhr = new XMLHttpRequest();
     var requestUrl = url  + "/ds/data";
     xhr.open("GET", requestUrl);
@@ -161,6 +172,7 @@ class Uploader extends React.Component {
           console.log(message);
           console.log(dsData);
           deleteSession();
+          setBlobData(dsData);
       } else {
           var reader = new FileReader();
           reader.onload = function() {
@@ -201,6 +213,23 @@ class Uploader extends React.Component {
     });
   }
 
+  getBlobData() {
+    var saveBlob = (function () {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        return function (blob, fileName) {
+            var url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+
+    saveBlob(this.state.blobData, this.state.fileName + ".p7s");
+  }
+
   render() {
     return (
       <div>
@@ -235,6 +264,7 @@ class Uploader extends React.Component {
                    </div>
                   <button type="button" onClick={this.getStatus.bind(this)}>getStatus</button>
                   <button onClick={this.getFeatures.bind(this)}>getFeatures</button>
+                  <button onClick={this.getBlobData.bind(this)}>getBlobData</button>
                   
                 </div>
             </div>
