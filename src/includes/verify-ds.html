@@ -1,0 +1,578 @@
+<!--suppress ALL -->
+<script type="text/javascript" language="javascript">
+
+    $(document).ready(function () {
+
+        function localizeRoutine() {
+            $("#dsvDsVerifyParamsTitle").text(i18next.t("ds:dsVerifyParamsTitle"));
+            $("#dsvDsTypeTitle").text(i18next.t("ds:dsTypeTitle"));
+            $("#dsvAttachedDsTitle").text(i18next.t("ds:attachedDsTitle"));
+            $("#dsvDetachedDsTitle").text(i18next.t("ds:detachedDsTitle"));
+            $("#dsvAttachedDsLabel").attr("title", i18next.t("ds:attachedDsTooltip"));
+            $("#dsvDetachedDsLabel").attr("title", i18next.t("ds:detachedDsTooltip"));
+            $("#dsvTsVerifyMode").text(i18next.t("ds:dsTsVerifyMode"));
+
+            $("#dsvIgnoreTsTitle").text(i18next.t("ds:ignoreTsTitle"));
+            $("#dsvVerifyTsIfPresentTitle").text(i18next.t("ds:verifyTsIfPresentTitle"));
+            $("#dsvVerifyTsErrorIfNotPresentTitle").text(i18next.t("ds:verifyTsErrorIfNotPresentTitle"));
+
+
+            $("#dsvIgnoreTsLabel").attr("title", i18next.t("ds:dsIgnoreTsTooltip"));
+            $("#dsvVerifyTsIfPresentLabel").attr("title", i18next.t("ds:dsVerifyTsIfPresentTooltip"));
+            $("#dsvVerifyTsErrorIfNotPresentLabel").attr("title", i18next.t("ds:dsVerifyTsErrorIfNotPresentTooltip"));
+
+            $("#dsvDataVerifyTsMode").text(i18next.t("ds:dataVerifyTsMode"));
+
+            $("#dsvDataIgnoreTsTitle").text(i18next.t("ds:ignoreTsTitle"));
+            $("#dsvDataVerifyTsIfPresentTitle").text(i18next.t("ds:verifyTsIfPresentTitle"));
+            $("#dsvDataVerifyTsErrorIfNotPresentTitle").text(i18next.t("ds:verifyTsErrorIfNotPresentTitle"));
+
+            $("#dsvDataIgnoreTsLabel").attr("title", i18next.t("ds:dataIgnoreTsTooltip"));
+            $("#dsvDataVerifyTsIfPresentLabel").attr("title", i18next.t("ds:dataVerifyTsIfPresentTooltip"));
+            $("#dsvDataVerifyTsErrorIfNotPresentLabel").attr("title", i18next.t("ds:dataVerifyTsErrorIfNotPresentTooltip"));
+
+            $("#dsvFileArea").text(i18next.t("file"));
+
+            $("#dsvFileForVerifyingTitle").text(i18next.t("ds:fileForVerifyingTitle"));
+            $("#dsvFileForVerifyingLabel").attr("title", i18next.t("ds:fileForVerifyingTooltip"));
+            $("#dsvChooseFileForVerifying").text(i18next.t("chooseFile"));
+            $("#dsvChangeFileForVerifying").text(i18next.t("changeFile"));
+            $("#dsvCleanupFileForVerifying").text(i18next.t("cleanup"));
+
+            $("#dsvFileWithDsTitle").text(i18next.t("ds:fileWithDsTitle"));
+            $("#dsvFileWithDsLabel").attr("title", i18next.t("ds:fileWithDsTooltip"));
+            $("#dsvChooseFileWithDs").text(i18next.t("chooseFile"));
+            $("#dsvChangeFileWithDs").text(i18next.t("changeFile"));
+            $("#dsvEraseFileWithDs").text(i18next.t("cleanup"));
+
+            $("#dsvPerformFileDs").text(i18next.t("ds:verifyDs"));
+            $("#dsvSaveDataFromSignedFile").text(i18next.t("ds:saveSignedData"));
+            $("#dsvResetFieldsFileDs").text(i18next.t("cleanUpForm"));
+
+            $("#dsvTextDataArea").text(i18next.t("textData"));
+            $("#dsvTextEncoding").text(i18next.t("encoding"));
+            $("#dsvUtf16LeEncoding").text(i18next.t("utf16LeEncoding"));
+            $("#dsvUtf8Encoding").text(i18next.t("utf8Encoding"));
+
+            $("#dsvTextDataFoVerifyingTitle").text(i18next.t("ds:textDataFoVerifyingTitle"));
+            $("#dsvTextDataFoVerifyingLabel").attr("title", i18next.t("ds:textDataFoVerifyingTooltip"));
+
+            $("#dsvDsBase64Title").text(i18next.t("ds:dsvBase64Title"));
+            $("#dsvDsBase64Label").attr("title", i18next.t("ds:dsvBase64Tooltip"));
+
+            $("#dsvDataFromSignedTextTitle").text(i18next.t("ds:dataFromSignedTextTitle"));
+            $("#dsvDataFromSignedTextLabel").attr("title", i18next.t("ds:dataFromSignedTextTooltip"));
+
+            $("#dsvPerformTextDs").text(i18next.t("ds:verifyDs"));
+            $("#dsvResetFieldsDsText").text(i18next.t("cleanUpForm"));
+
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+
+        function formatDate(dateInString) {
+            var localeDateOptions = {
+                "day": "numeric",
+                "month": "numeric",
+                "year": "numeric",
+                "hour": "2-digit",
+                "minute": "2-digit",
+                "second": "2-digit",
+                "timeZoneName": "short"
+            }
+
+            return new Date(dateInString).toLocaleDateString(i18next.language, localeDateOptions);
+        }
+
+        function clearVerifyResultsTextDs() {
+            $("#dsvVerifyResultsTextDs").children().remove();
+            $("#dsvDataFromSignedText").val("");
+        }
+
+        function clearVerifyResultsFileDs() {
+            $("#dsvVerifyResultsFileDs").children().remove();
+            $("#dsvSaveDataFromSignedFile").off("click");
+            $("#dsvSaveDataFromSignedFile").prop("disabled", true);
+        }
+
+
+        $("#dsvResetFieldsDsText").click(function () {
+            $("#dsvTextForDs").val("");
+            $("#dsvTextForDs").keyup();
+            $("#dsvDsBase64").val("");
+            $("#dsvDsBase64").keyup();
+        });
+
+        $("#dsvResetFieldsFileDs").click(function () {
+            $("#dsvDsFile").val("");
+            $("#dsvDsFile").change();
+            $("#dsvFileForDs").val("");
+            $("#dsvFileForDs").change();
+        });
+
+        function tuneTextUi() {
+            var disablePerformTextDs = ($("#dsvDsBase64").val() == "");
+            if ($("input[name='dsvSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED) {
+                $("#dsvTextForDsGroup").hide();
+                $("#dsvDataFromSignedTextGroup").show();
+            } else {
+                $("#dsvTextForDsGroup").show();
+                $("#dsvDataFromSignedTextGroup").hide("");
+                disablePerformTextDs = disablePerformTextDs || ($("#dsvTextForDs").val() == "");
+            }
+            $("#dsvPerformTextDs").prop("disabled", disablePerformTextDs);
+        }
+
+        function tuneFileUi() {
+            var disablePerformFileDs = ($("#dsvDsFile").get(0).files[0] == undefined);
+            if ($("input[name='dsvSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED) {
+                $("#dsvFileForDsGroup").hide();
+                $("#dsvSaveDataFromSignedFile").show();
+            } else {
+                $("#dsvFileForDsGroup").show();
+                $("#dsvSaveDataFromSignedFile").hide();
+                disablePerformFileDs = disablePerformFileDs || ($("#dsvFileForDs").get(0).files[0] == undefined);
+            }
+            $("#dsvPerformFileDs").prop("disabled", disablePerformFileDs);
+        }
+
+        $("input[name='dsvSignatureType'],input[name='dsvTsCheckOptionDs'],input[name='dsvTsCheckOptionData']").change(function () {
+            clearVerifyResultsTextDs();
+            clearVerifyResultsFileDs();
+            tuneFileUi();
+            tuneTextUi();
+        });
+
+        $("#dsvTextForDs,#dsvDsBase64").on({
+            keyup: function () {
+                clearVerifyResultsTextDs();
+                tuneTextUi();
+            },
+            change: function () {
+                clearVerifyResultsTextDs();
+                tuneTextUi();
+            }
+        });
+
+        $("#dsvFileForDs,#dsvDsFile").change(function () {
+            clearVerifyResultsFileDs();
+            tuneFileUi();
+        });
+
+        function initDsVerifyOptions(aTicket) {
+            aTicket.signatureType = $("input[name='dsvSignatureType']:checked").val();
+            aTicket.signatureTsVerifyOption = $("input[name='dsvTsCheckOptionDs']:checked").val();
+            aTicket.dataTsVerifyOption = $("input[name='dsvTsCheckOptionData']:checked").val();
+        }
+
+        function constructTimestampDetails(aTs, aTsType) {
+            var contentTs = i18next.t("dataTs");
+            var signatureTs = i18next.t("dsTs");
+            var tsTypeString = function () {
+                if (aTsType == "content") {
+                    return contentTs;
+                }
+                if (aTsType == "signature") {
+                    return signatureTs;
+                }
+                return "";
+            }
+            var result = $("<div></div>");
+            if (aTs && aTs.dateTime) {
+                if (aTs.isFailure) {
+                    result.append(tsTypeString() + i18next.t("ds:errorWhileVerifying"));
+                } else {
+                    result.append(
+                        tsTypeString()
+                        + ": "
+                        + (aTs.isValid ? i18next.t("ds:sheIsValid") : i18next.t("ds:sheIsInvalid"))
+                        + "; "
+                        + formatDate(aTs.dateTime)
+                    );
+                }
+            }
+            return result;
+        }
+
+        function showDsVerifyResults(verifyResults, elementToDisplay) {
+            elementToDisplay.children().remove();
+            for (var i = 0; i < verifyResults.length; i++) {
+                var signerBlock = $("<div></div>").addClass("ptblg-default");
+                var signerRow = $("<div></div>").addClass("row");
+                var signerNumber = $("<div></div>").addClass("col-xs-2");
+                var signerStatus = $("<div></div>").addClass("col-xs-2").addClass("text-center");
+                var signerDetails = $("<div></div>").addClass("col-xs-8").addClass("signer-details");
+
+                signerNumber.append(i18next.t("ds:signature") + (i + 1));
+                if (verifyResults[i].status == "SUCCESS") {
+                    signerBlock.addClass(verifyResults[i].isValid ? "alert alert-success" : "alert alert-warning");
+                    signerStatus.append(verifyResults[i].isValid ? i18next.t("ds:heIsValid") : i18next.t("ds:heIsInvalid"));
+                    signerDetails.append($("<div></div>").append(i18next.t("ds:signer") + verifyResults[i].signerInfo.ownerCertificateInfo.value.ownerFullName.value));
+                    signerDetails.append($("<div></div>").append(i18next.t("ds:ca") + verifyResults[i].signerInfo.issuerCertificateInfo.value.issuerFullName.value));
+                    signerDetails.append($("<div></div>").append(i18next.t("ds:dsDate") + formatDate(verifyResults[i].signingDateTime)));
+                    signerDetails.append(constructTimestampDetails(verifyResults[i].contentTimestamp, "content"));
+                    if (verifyResults[i].signatureTimestamps && verifyResults[i].signatureTimestamps.length) {
+                        for (var j = 0; j < verifyResults[i].signatureTimestamps.length; j++) {
+                            signerDetails.append(constructTimestampDetails(verifyResults[i].signatureTimestamps[j], "signature"));
+                        }
+                    }
+                } else {
+                    signerStatus.append(i18next.t("ds:notDefined"));
+                    signerBlock.addClass("alert alert-warning");
+                    signerDetails.append(verifyResults[i].failureCause);
+                }
+
+                signerRow.append(signerNumber);
+                signerRow.append(signerStatus);
+                signerRow.append(signerDetails);
+                signerBlock.append(signerRow);
+                elementToDisplay.append(signerBlock);
+            }
+        }
+
+        $("#dsvPerformTextDs").click(function () {
+            try {
+                var arr = toByteArray($("#dsvDsBase64").val());
+                var dsData = new Uint8Array(arr);
+            } catch (e) {
+                alert(i18next.t("ds:illegalBase64SignatureFormat"));
+                return;
+            }
+            var t = new sjwsa.Ticket();
+
+            clearVerifyResultsTextDs();
+
+            t.open().then(function () {
+                var selectedEncoding = $("input[name='dsvEncodingForText']:checked").val();
+                var encoder = (selectedEncoding == sjwsa.TextDataEncoding.UTF16LE) ? sjwsa.Encoders[selectedEncoding] : sjwsa.Encoders[sjwsa.TextDataEncoding.UTF8];
+                var arr = encoder.encode($("#dsvTextForDs").val());
+                t.rawData = new Uint8Array(arr);
+                return t.uploadData();
+            }).then(function () {
+                t.dsData = dsData;
+                return t.uploadDsData();
+            }).then(function () {
+                initDsVerifyOptions(t);
+                return t.setOption();
+            }).then(function () {
+                return t.verifyDs();
+            }).then(function () {
+                return t.getVerifyDsResult().then(function (verifyResults) {
+                    alert(i18next.t("ds:dsIsValid"));
+                    showDsVerifyResults(verifyResults, $("#dsvVerifyResultsTextDs"));
+                }, function (verifyResults) {
+                    if (verifyResults) {
+                        alert(i18next.t("ds:dsIsInvalid"));
+                        showDsVerifyResults(verifyResults, $("#dsvVerifyResultsTextDs"));
+                    } else {
+                        alert(i18next.t("ds:errorDsVerifyingProcess"))
+                    }
+                    return Promise.reject();
+                }).then(function () {
+                    if ($("input[name='dsvSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED) {
+                        return t.downloadSigneData().then(function () {
+                            var reader = new FileReader();
+                            var selectedEncoding = $("input[name='dsvEncodingForText']:checked").val();
+                            var encoder = (selectedEncoding == sjwsa.TextDataEncoding.UTF16LE) ? sjwsa.Encoders[selectedEncoding] : sjwsa.Encoders[sjwsa.TextDataEncoding.UTF8];
+                            $("#dsvDataFromSignedText").val("");
+                            reader.onload = function () {
+                                var uintArray = new Uint8Array(reader.result);
+                                var arr = [].slice.call(uintArray);
+                                var s = encoder.decode(arr);
+                                $("#dsvDataFromSignedText").val(s);
+                            }
+                            reader.readAsArrayBuffer(t.signedData);
+                        }, function () {
+                            alert(i18next.t("ds:errorGettingDataFromSignature"));
+                        })
+                    }
+                }).catch(function () {
+                });
+            }, function () {
+                alert(i18next.t("ds:errorDsVerifying"));
+            }).then(function () {
+                t.close()
+            });
+        });
+
+        $("#dsvPerformFileDs").click(function () {
+            var t = new sjwsa.Ticket();
+            var dsFile = $("#dsvDsFile").get(0).files[0];
+            var dataFile = $("#dsvFileForDs").get(0).files[0];
+
+            clearVerifyResultsFileDs();
+
+            t.open().then(function () {
+                t.rawData = dataFile;
+                return t.uploadData();
+            }).then(function () {
+                t.dsData = dsFile;
+                return t.uploadDsData();
+            }).then(function () {
+                initDsVerifyOptions(t);
+                return t.setOption();
+            }).then(function () {
+                return t.verifyDs();
+            }).then(function () {
+                return t.getVerifyDsResult().then(function (verifyResults) {
+                    alert(i18next.t("ds:dsIsValid"));
+                    showDsVerifyResults(verifyResults, $("#dsvVerifyResultsFileDs"));
+                }, function (verifyResults) {
+                    if (verifyResults) {
+                        alert(i18next.t("ds:dsIsInvalid"));
+                        showDsVerifyResults(verifyResults, $("#dsvVerifyResultsFileDs"));
+                    } else {
+                        alert(i18next.t("ds:errorDsVerifyingProcess"))
+                    }
+                })
+            }, function () {
+                alert(i18next.t("ds:errorDsVerifying"))
+            }).then(function () {
+                if ($("input[name='dsvSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED) {
+                    return t.downloadSigneData().then(function () {
+                        $("#dsvSaveDataFromSignedFile").off("click");
+                        $("#dsvSaveDataFromSignedFile").prop("disabled", false);
+                        $("#dsvSaveDataFromSignedFile").click(function () {
+                            saveAs(
+                                t.signedData,
+                                dsFile.name.lastIndexOf(".") < 2 ? dsFile.name : dsFile.name.substr(0, dsFile.name.lastIndexOf("."))
+                            );
+                        })
+                        alert(i18next.t("ds:successGettingDataFromSignature"))
+                    }, function () {
+                        alert(i18next.t("ds:errorGettingDataFromSignature"));
+                    })
+                }
+            }).then(function () {
+                t.close()
+            });
+        });
+
+        tuneFileUi();
+        tuneTextUi();
+    });
+
+</script>
+<div class="row">
+    <div class="col-xs-4 mtb-default">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title" id="dsvDsVerifyParamsTitle"></div>
+            </div>
+            <div id="dsvLeftParamArea" class="panel-body">
+                <div>
+                    <label data-toggle="collapse" href="#dsvLeftParamAreaDsType"
+                           aria-expanded="true" aria-controls="dsvLeftParamAreaDsType" role="button">
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"/>
+                        <span id="dsvDsTypeTitle"></span>
+                    </label>
+                    <div id="dsvLeftParamAreaDsType" class="collapse in">
+                        <div class="form-group">
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvAttachedDsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvSignatureType" value="attached">
+                                    <span id="dsvAttachedDsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvDetachedDsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvSignatureType" value="detached" checked>
+                                    <span id="dsvDetachedDsTitle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label data-toggle="collapse" href="#dsvLeftParamAreaDsTsCheck"
+                           aria-expanded="false" aria-controls="dsvLeftParamAreaDsTsCheck" role="button">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"/>
+                        <span id="dsvTsVerifyMode"></span>
+                    </label>
+                    <div id="dsvLeftParamAreaDsTsCheck" class="collapse">
+                        <div class="form-group">
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvIgnoreTsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionDs" value="ignore">
+                                    <span id="dsvIgnoreTsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvVerifyTsIfPresentLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionDs" value="verifyIfPresent" checked>
+                                    <span id="dsvVerifyTsIfPresentTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvVerifyTsErrorIfNotPresentLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionDs" value="verifyOrFailIfNotPresent">
+                                    <span id="dsvVerifyTsErrorIfNotPresentTitle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label data-toggle="collapse" href="#dsvLeftParamAreaDataTsCheck"
+                           aria-expanded="false" aria-controls="dsvLeftParamAreaDataTsCheck" role="button">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"/>
+                        <span id="dsvDataVerifyTsMode"></span>
+                    </label>
+                    <div id="dsvLeftParamAreaDataTsCheck" class="collapse">
+                        <div class="form-group">
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvDataIgnoreTsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionData" value="ignore">
+                                    <span id="dsvDataIgnoreTsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvDataVerifyTsIfPresentLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionData" value="verifyIfPresent" checked>
+                                    <span id="dsvDataVerifyTsIfPresentTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dsvDataVerifyTsErrorIfNotPresentLabel" data-placement="top"
+                                       data-toggle="tooltip" class="grey-tooltip">
+                                    <input type="radio" name="dsvTsCheckOptionData" value="verifyOrFailIfNotPresent">
+                                    <span id="dsvDataVerifyTsErrorIfNotPresentTitle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dsvDataPanelHolder" class="col-xs-8 mtb-default panel-group" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="dsvFilePanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#dsvDataPanelHolder"
+                     href="#dsvFilePanelBody"
+                     aria-controls="dsvFilePanelBody" aria-expanded="true" role="button">
+                    <span id="dsvFileArea"></span>
+                </div>
+            </div>
+            <div id="dsvFilePanelBody" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="dsvFilePanelHeading">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div id="dsvFileForDsGroup">
+                            <label id="dsvFileForVerifyingLabel" class="mtb-default grey-tooltip" data-placement="top"
+                                   data-toggle="tooltip">
+                                <span id="dsvFileForVerifyingTitle"></span>
+                            </label>
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename"></span>
+                                </div>
+                                <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="dsvChooseFileForVerifying" class="fileinput-new"></span>
+                                        <span id="dsvChangeFileForVerifying" class="fileinput-exists"></span>
+                                        <input type="file" id="dsvFileForDs">
+                                    </span>
+                                <a id="dsvCleanupFileForVerifying" href="#"
+                                   class="input-group-addon btn btn-default fileinput-exists"
+                                   data-dismiss="fileinput"></a>
+                            </div>
+                        </div>
+                        <label id="dsvFileWithDsLabel" class="mtb-default grey-tooltip" data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="dsvFileWithDsTitle"></span>
+                        </label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="dsvChooseFileWithDs" class="fileinput-new"></span>
+                                        <span id="dsvChangeFileWithDs" class="fileinput-exists"></span>
+                                        <input type="file" id="dsvDsFile">
+                                    </span>
+                            <a id="dsvEraseFileWithDs" href="#"
+                               class="input-group-addon btn btn-default fileinput-exists"
+                               data-dismiss="fileinput"></a>
+                        </div>
+                    </div>
+
+                    <div id="dsvVerifyResultsFileDs"/>
+
+                    <button type="button" class="btn btn-default" id="dsvPerformFileDs" disabled></button>
+                    <button type="button" class="btn btn-default" id="dsvSaveDataFromSignedFile" disabled></button>
+                    <button type="button" class="btn btn-default" id="dsvResetFieldsFileDs"></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="dsvTextPanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#dsvDataPanelHolder"
+                     href="#dsvTextPanelBody"
+                     aria-expanded="false" aria-controls="dsvTextPanelBody" role="button">
+                    <span id="dsvTextDataArea"></span>
+                </div>
+            </div>
+            <div id="dsvTextPanelBody" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="dsvTextPanelHeading">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <label id="dsvTextEncoding"></label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="dsvEncodingForText" value="UTF-16LE" checked>
+                                <span id="dsvUtf16LeEncoding"></span>
+                            </label>
+                            <label>
+                                <input type="radio" name="dsvEncodingForText" value="UTF-8">
+                                <span id="dsvUtf8Encoding"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="dsvTextForDsGroup">
+                        <label id="dsvTextDataFoVerifyingLabel" for="dsvTextForDs" class="mtb-default grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="dsvTextDataFoVerifyingTitle"></span>
+                        </label>
+                        <textarea id="dsvTextForDs" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label id="dsvDsBase64Label" for="dsvDsBase64" class="mtb-default grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="dsvDsBase64Title"></span>
+                        </label>
+                        <textarea id="dsvDsBase64" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group" id="dsvDataFromSignedTextGroup">
+                        <label id="dsvDataFromSignedTextLabel" for="dsvDataFromSignedText"
+                               class="mtb-default grey-tooltip" data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="dsvDataFromSignedTextTitle"></span>
+                        </label>
+                        <textarea id="dsvDataFromSignedText" rows="2" class="form-control" readonly></textarea>
+                    </div>
+
+                    <div id="dsvVerifyResultsTextDs"/>
+
+                    <button type="button" class="btn btn-default" id="dsvPerformTextDs" disabled></button>
+                    <button type="button" class="btn btn-default" id="dsvResetFieldsDsText"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

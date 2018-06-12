@@ -1,0 +1,24 @@
+{
+  "encryptionError" : "Помилка при шифруванні.",
+  "encryptionSuccess" : "Шифрування виконано успішно.",
+  "encryptionParamsTitle" : "Параметри шифрування",
+  "recipientCertificate" : "Сертифікат отримувача",
+  "recipientCertificateTitle" : "Сертифікат отримувача зашифрованих даних:",
+  "recipientCertificateTooltip" : "Сертифікат ключа шифрування отримувача зашифрованих даних",
+  "fileForEncryptTooltip" : "Файл, який потрібно зашифрувати",
+  "fileForEncryptTitle" : "Файл для шифрування:",
+  "performDataEncryption" : "Шифрувати",
+  "saveEncryptedData" : "Зберегти шифровані дані у файл",
+  "textForEncryptTooltip" : "Текстові дані, які потрібно зашифрувати",
+  "textForEncryptTitle" : "Текст для шифрування:",
+  "encryptedTextBase64Title" : "Шифровані дані в кодуванні Base64:",
+  "encryptedTextBase64Tooltip" : "Шифровані дані для 'Текст для шифрування' в кодуванні Base64",
+
+  "addWhileEncryptTitle" : "Додати при шифруванні:",
+  "signerAndCaCertTitle" : "Сертифікат відправника та сертифікати видавців",
+  "signerAndCaCertTooltip" : "До шифрованих даних буде додано сертифікат відправника та сертифікат ЦСК, яким був виданий сертифікат відправника. Якщо ЦСК акредитовано в ЦЗО, то буде доданий також сертифікат ЦЗО",
+  "signerCertTitle" : "Сертифікат відправника",
+  "signerCertTooltip" : "До шифрованих даних буде додано сертифікат відправника",
+  "encNothingTitle" : "Не додавати сертифікат відправника та сертифікати видавців",
+  "encNothingTooltip" : "До шифрованих даних не буде додано додаткової інформації щодо відправника"
+}

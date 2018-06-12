@@ -1,0 +1,79 @@
+.mtb-default {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.ml-tool-panel {
+    margin-left: 14px;
+}
+
+.ptblg-default {
+    padding: 7px;
+}
+
+.serviceConnected {
+    background-color: #cbffc0;
+    padding: 10px 0px;
+    height: 64px;
+}
+
+.serviceDisconnected {
+    background-color: #dddddd;
+    padding: 10px 0px;
+    height: 64px;
+}
+
+body {
+    color: #888888;
+}
+
+.dl-horizontal dt {
+    white-space: normal;
+    width: 250px;
+}
+
+.dl-horizontal dd {
+    margin-left: 270px;
+}
+
+.dl-horizontal {
+    margin-bottom: 0px;
+}
+
+.no-margin {
+    margin: 0px;
+}
+
+.margin-right-7 {
+    margin-right: 7px;
+}
+
+.signer-details {
+    padding-top: 2px;
+    font-size: 12px;
+}
+
+/*#dscLeftParamArea label,
+#dsvLeftParamArea label {
+    margin-left: 15px;
+}*/
+
+#dscLeftParamArea label + span,
+#dsvLeftParamArea label + span {
+    margin-left: -17px;
+    margin-top: 5px;
+}
+
+.grey-tooltip + .tooltip > .tooltip-inner {
+    background-color: #555555;
+}
+.grey-tooltip + .tooltip > .tooltip-arrow {
+    border-bottom-color: #555555;
+}
+
+textarea {
+    resize: none;
+    overflow-x: hidden;
+}
+
+

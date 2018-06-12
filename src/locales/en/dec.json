@@ -1,0 +1,11 @@
+{
+  "wrongEncDataInBase64" : "Invalid encrypted data format in Base64 encoding.",
+  "decryptionError" : "Decryption error.",
+  "decryptionSuccess" : "Decryption completed successfully.",
+  "encryptedFileTooltip" : "The file you want to decrypt",
+  "encryptedFileTitle" : "File for decryption:",
+  "performBinaryDataDecryption" : "Decrypt",
+  "saveBinaryDecryptedData" : "Save decrypted data to a file",
+  "encryptedBase64DataTitle" : "Encrypted data in Base64 encoding:",
+  "decryptedTextBase64Title" : "Decrypted test:"
+}

@@ -1,0 +1,27 @@
+{
+  "encryptionError" : "Encryption error.",
+  "encryptionSuccess" : "Encryption is successful.",
+  "encryptionParamsTitle" : "Encryption options",
+  "recipientCertificate" : "Recipient certificate",
+  "recipientCertificateTitle" : "Encrypted data recepient certificate:",
+  "recipientCertificateTooltip" : "Encrypted data recepient certificate for encryption key",
+  "fileForEncryptTooltip" : "The file you want to encrypt",
+  "fileForEncryptTitle" : "File for encryption:",
+  "performDataEncryption" : "Encrypt",
+  "saveEncryptedData" : "Save ecrypted data to a file",
+  "textForEncryptTooltip" : "The text data you want to encrypt",
+  "textForEncryptTitle" : "Text for encryption:",
+  "encryptedTextBase64Title" : "Encrypted text in Base64 encoding:",
+  "encryptedTextBase64Tooltip" : "Encrypted data for 'Text for encryption' in Base64 encoding",
+
+  "addWhileEncryptTitle" : "Add while encryption:",
+  "signerAndCaCertTitle" : "Signer and issuers certificates",
+  "signerAndCaCertTooltip" : "The encrypted data will be accompanied by a signer certificate and a CA certificate, which the signer's certificate has been issued. If the CA is accredited by the CCA, then the CCA certificate will be added as well.",
+  "signerCertTitle" : "Signer certificate",
+  "signerCertTooltip" : "The signer's certificate will be added to the encrypted data",
+  "encNothingTitle" : "Do not add signer certificate and issuer certificates",
+  "encNothingTooltip" : "Additional information about the signer will not be added to the encrypted data"
+}
+
+
+

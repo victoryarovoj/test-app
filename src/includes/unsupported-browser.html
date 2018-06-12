@@ -1,0 +1,35 @@
+<script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+
+        function localizeRoutine() {
+            $("#ubBrowserIsNotSupported").text(i18next.t("ub:browserIsNotSupported"));
+            $("#ubSupportedBrowsers").text(i18next.t("ub:supportedBrowsers"));
+            $("#ubChrome").text("Chrome " + "[" + i18next.t("ub:version") + " 32 " + i18next.t("ub:andLater") + "]");
+            $("#ubEdge").text("Microsoft Edge");
+            $("#ubFirefox").text("Firefox " + "[" + i18next.t("ub:version") + " 29 " + i18next.t("ub:andLater") + "]");
+            $("#ubOpera").text("Opera " + "[" + i18next.t("ub:version") + " 19 " + i18next.t("ub:andLater") + "]");
+            $("#ubSafari").text("Safari " + "[" + i18next.t("ub:version") + " 8 " + i18next.t("ub:andLater") + "]");
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+    })
+</script>
+<div class="col-xs-10 col-xs-offset-1">
+    <h3 class="text-center">
+        <small>
+            <span id="ubBrowserIsNotSupported"></span><br>
+            <span id="ubSupportedBrowsers"></span><p>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-success"><span id="ubChrome"></span></li>
+                <li class="list-group-item list-group-item-success"><span id="ubEdge"></span></li>
+                <li class="list-group-item list-group-item-success"><span id="ubFirefox"></span></li>
+                <li class="list-group-item list-group-item-success"><span id="ubOpera"></span></li>
+                <li class="list-group-item list-group-item-success"><span id="ubSafari"></span></li>
+            </ul>
+        </small>
+    </h3>
+</div>

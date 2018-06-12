@@ -1,0 +1,112 @@
+<script type="text/javascript" language="javascript">
+    onSignatureCertInfoTabHandler = function () {
+        sjwsa.Enviroment.getCertificateInfo("signature").then(function (jsonObject) {
+            //var jsonText = JSON.stringify(jsonObject, null, 2);
+            if (!(jsonObject instanceof Object && Object.keys(jsonObject).length > 0 )) {
+                $("#dsCertInfoContent").hide();
+                return;
+            };
+
+            $("#dsCertInfoContent").show();
+            var ownerInfo = jsonObject.ownerCertificateInfo.value;
+            var issuerInfo = jsonObject.issuerCertificateInfo.value;
+            var publicKeyInfo = jsonObject.publicKeyCertificateInfo.value;
+            var extCertInfo = jsonObject.extensionsCertificateInfo.value;
+            var extPersonalData = extCertInfo.personalData.value;
+
+            var dl = $("#dsOwnerInfoBodyList");
+            dl.empty();
+            for (var i in ownerInfo) {
+                if (ownerInfo[i].value != null) {
+                    dl.append($("<dt></dt>").text(ownerInfo[i].description));
+                    dl.append($("<dd></dd>").text(ownerInfo[i].value));
+                }
+            }
+            for (var i in extPersonalData) {
+                if (i === "drfou" || i === "passport" || i === "eddrun") {
+                    if (extPersonalData[i].value != null) {
+                        dl.append($("<dt></dt>").text(extPersonalData[i].description));
+                        dl.append($("<dd></dd>").text(extPersonalData[i].value));
+                    }
+                }
+            }
+
+            dl = $("#dsIssuerInfoBodyList");
+            dl.empty();
+            for (var i in issuerInfo) {
+                if (issuerInfo[i].value != null) {
+                    dl.append($("<dt></dt>").text(issuerInfo[i].description));
+                    dl.append($("<dd></dd>").text(issuerInfo[i].value));
+                }
+            }
+
+            dl = $("#dsPublicKeyInfoBodyList");
+            dl.empty();
+            for (var i in publicKeyInfo) {
+                if (publicKeyInfo[i].value != null) {
+                    dl.append($("<dt></dt>").text(publicKeyInfo[i].description));
+                    dl.append($("<dd></dd>").text(publicKeyInfo[i].value));
+                }
+            }
+
+            dl = $("#dsCertInfoBodyList");
+            dl.empty();
+            dl.append($("<dt></dt>").text(jsonObject.certificateSerialNumber.description));
+            dl.append($("<dd></dd>").text(jsonObject.certificateSerialNumber.value));
+            dl.append($("<dt></dt>").text(jsonObject.notBefore.description));
+            dl.append($("<dd></dd>").text(jsonObject.notBefore.value));
+            dl.append($("<dt></dt>").text(jsonObject.notAfter.description));
+            dl.append($("<dd></dd>").text(jsonObject.notAfter.value));
+            dl.append($("<dt></dt>").text(extCertInfo.isReinforced.description));
+            dl.append($("<dd></dd>").text(extCertInfo.isReinforced.value == "true" ? i18next.t("yesUCase") : i18next.t("noUCase")));
+        })
+    };
+
+    $(document).ready(function() {
+
+        function localizeRoutine() {
+            $("#dsOwnerInfoTitle").text(i18next.t("cert:ownerInfoTitle"));
+            $("#dsIssuerInfoTitle").text(i18next.t("cert:issuerInfoTitle"));
+            $("#dsPublicKeyInfoBodyListTitle").text(i18next.t("cert:publicKeyInfoBodyListTitle"));
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+    })
+</script>
+
+<div class="mtb-default" id="dsCertInfoContent">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <dl class="dl-horizontal" id="dsCertInfoBodyList"></dl>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span id="dsOwnerInfoTitle"></span>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal" id="dsOwnerInfoBodyList"></dl>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span id="dsIssuerInfoTitle"></span>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal" id="dsIssuerInfoBodyList"></dl>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <span id="dsPublicKeyInfoBodyListTitle"></span>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal" id="dsPublicKeyInfoBodyList"></dl>
+        </div>
+    </div>
+
+</div>

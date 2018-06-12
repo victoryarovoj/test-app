@@ -1,41 +1,5 @@
-export const testAction = () => (dispatch) => {
-    dispatch({
-        type: 'TEST_ACTION',
-        payload: 123
-    })
-}
-
-export const getStatus = () => (dispatch) => {
-	fetch("https://local.cipher.kiev.ua:9091/api/v1/status", {
-			method: 'GET'
-		}).then((response) => {
-
-		response.json().then((response) => {
-				dispatch({
-			    type: 'GET_STATUS',
-			    payload: response
-			})
-		});
-    });
-}
-
-export const getFeatures = () => (dispatch) => {
-	return fetch("https://local.cipher.kiev.ua:9091/api/v1/features", {
-      method: 'GET'
-      	}).then((response) => {
-      		response.json().then((response) => {
-				dispatch({
-			    type: 'GET_FEATURES',
-			    payload: response
-			})
-		});
-    });
-}
-
-export const testInit = () => (dispatch) => {
-	dispatch({
-        type: 'TEST_INIT',
-        payload: {
+export default function () {
+	return {
         SignatureType: {
             ATTACHED: "attached",
             DETACHED: "detached"
@@ -89,5 +53,4 @@ export const testInit = () => (dispatch) => {
             DECRYPT: "DECRYPT"
         }
     }
-    })
 }

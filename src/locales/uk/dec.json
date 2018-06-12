@@ -1,0 +1,11 @@
+{
+  "wrongEncDataInBase64" : "Невірний формат шифрованих даних в кодуванні Base64.",
+  "decryptionError" : "Помилка при дешифруванні.",
+  "decryptionSuccess" : "Дешифрування виконано успішно.",
+  "encryptedFileTooltip" : "Файл, який потрібно дешифрувати",
+  "encryptedFileTitle" : "Файл для дешифрування:",
+  "performBinaryDataDecryption" : "Дешифрувати",
+  "saveBinaryDecryptedData" : "Зберегти дешифровані дані у файл",
+  "encryptedBase64DataTitle" : "Шифровані дані в кодуванні Base64:",
+  "decryptedTextBase64Title" : "Дешифрований текст:"
+}

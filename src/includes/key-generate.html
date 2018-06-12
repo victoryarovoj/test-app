@@ -1,0 +1,37 @@
+<script type="text/javascript" language="javascript">
+    prepareKeyGenerationTab = function () {
+        $("#keyGenerationTopContainer").children().remove();
+        sjwsa.Enviroment.getKeyGenerationProfiles().then(function (jsonObject) {
+            sjwsa.keyGenerator.setProfiles(jsonObject);
+            var selectProfileItem = sjwsa.keyGenerator.getKeyProfileSelect();
+            selectProfileItem.children("select").change(function () {
+                $("#keyGenerationTopContainer").children("form").remove();
+                var keyGenerationProfileId = $(this).val();
+                var keyGenerationForm = sjwsa.keyGenerator.getKeyGenerationForm(keyGenerationProfileId);
+                $("#keyGenerationTopContainer").append(keyGenerationForm);
+                keyGenerationForm.validator();
+                keyGenerationForm.validator().on('submit', function (e) {
+                    if (!e.isDefaultPrevented()) {
+                        var jsonData = sjwsa.keyGenerator.getJsonFromKeyGenerationForm(keyGenerationForm);
+                        jsonData["NEW_KEY_TYPE"] = "SIGNATURE_AND_AGREEMENT";
+                        jsonData["PROFILE_ID"] = keyGenerationProfileId;
+                        sjwsa.Enviroment.generateKeys(jsonData).then(function () {
+                            alert(i18next.t("keygen:keysSuccessfullyGenerated"));
+                            prepareKeyGenerationTab();
+                        }, function (m) {
+                            alert(i18next.t("keygen:keyHasNotGenerated") + m);
+                        });
+                    }
+                    return false;
+                })
+            })
+            $("#keyGenerationTopContainer").append(selectProfileItem);
+        });
+    }
+</script>
+
+<div class="row">
+    <div class="col-xs-offset-2 col-xs-8 mtb-default" id="keyGenerationTopContainer">
+
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { sjwsa } from "../libs/sjwsa-client-1.1";
 import 'bootstrap/dist/css/bootstrap.css';
 
 class Uploader extends React.Component {
@@ -192,14 +193,7 @@ class Uploader extends React.Component {
   }
 
   getStatus() {
-    return fetch("https://local.cipher.kiev.ua:9091/api/v1/status", {
-      method: 'GET'
-      }).then((response) => {
-      
-      response.json().then((response) => {
-        console.log(response);
-      });
-    });
+    sjwsa.getServiceStatus();
   }
 
   getFeatures() {
@@ -231,6 +225,7 @@ class Uploader extends React.Component {
   }
 
   render() {
+    
     return (
       <div>
           <div className="container">

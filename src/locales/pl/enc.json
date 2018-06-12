@@ -1,0 +1,23 @@
+﻿{
+  "encryptionError" : "Błąd podczas szyfrowania.",
+  "encryptionSuccess" : "Szyfrowanie zakończone sukcesem.",
+  "encryptionParamsTitle" : "Parametry szyfrowania",
+  "recipientCertificate" : "Cerytfikat odbiorcy",
+  "recipientCertificateTitle" : "Certyfikat odbiorcy zaszyfrowanych danych:",
+  "recipientCertificateTooltip" : "Certyfikat klucza szyfrowania odbiorcy zaszyfrowanych danych",
+  "fileForEncryptTooltip" : "Plik, który należy zaszyfrować",
+  "fileForEncryptTitle" : "Plik do szyfrowania:",
+  "performDataEncryption" : "Szyfrować",
+  "saveEncryptedData" : "Zapisać zaszyfrowane dane jako",
+  "textForEncryptTooltip" : "Tekstowe dane, które należy zaszyfrować",
+  "textForEncryptTitle" : "Tekst do szyfrowania:",
+  "encryptedTextBase64Title" : "Zaszyfrowane dane w kodowaniu Base64:",
+  "encryptedTextBase64Tooltip" : "Zaszyfrowane dane dla 'Tekst do szyfrowania' w kodowaniu Base64",
+  "addWhileEncryptTitle": "Dodaj podczas szyfrowania:",
+  "signerAndCaCertTitle" : "Certyfikat podpisującego i certyfikat wydawców",
+  "signerAndCaCertTooltip" : "Do szyfrowanych danych zostanie dodany certyfikat podpisującego i certyfikat CA, który wydał certyfikat podpisującego. Jeżeli  CA jest akredytowany w CZO, to zostanie dodany również certyfikat CZО",
+  "signerCertTitle" : "Certyfikat podpisującego",
+  "signerCertTooltip" : "Do szyfrowanych danych zostanie dodany certyfikat podpisującego",
+  "encNothingTitle" : "Nie dodawaj certyfikatu podpisującego i certyfikatów wydawców",
+  "encNothingTooltip": "Do szyfrowanych danych nie zostanie dodana informacja uzupełniająca dotycząca podpisującego"
+}

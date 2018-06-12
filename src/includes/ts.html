@@ -1,0 +1,220 @@
+<script type="text/javascript" language="javascript">
+
+
+    $(document).ready(function () {
+
+        function localizeRoutine() {
+            $("#tsCreatingTitle").text(i18next.t("ts:tsCreatingTitle"));
+            $("#tscFileForTsLabel").attr("title", i18next.t("ts:dataFileTooltip"));
+            $("#tscFileForTsTitle").text(i18next.t("ts:dataFileTitle"));
+            $("#tscChooseFileForTs").text(i18next.t("chooseFile"));
+            $("#tscChangeFileForTs").text(i18next.t("changeFile"));
+            $("#tscCleanupFileForTs").text(i18next.t("cleanup"));
+            $("#tscPerformFileTs").text(i18next.t("ts:createTs"));
+            $("#tscSaveFileTs").text(i18next.t("ts:saveTsToFile"));
+            $("#tscResetFileTsFields").text(i18next.t("cleanUpForm"));
+            $("#tsvVerifyingTitle").text(i18next.t("ts:tsVerifyingTitle"));
+            $("#tsvFileForTsTitle").text(i18next.t("ts:fileForTsTitle"));
+            $("#tsvFileForTsLabel").attr("title", i18next.t("ts:fileForTsTooltip"));
+            $("#tsvChooseFileForTs").text(i18next.t("chooseFile"));
+            $("#tsvChangeFileForTs").text(i18next.t("changeFile"));
+            $("#tsvCleanupFileForTs").text(i18next.t("cleanup"));
+            $("#tsvTsFileTitle").text(i18next.t("ts:tsFileTitle"));
+            $("#tsvTsFileLabel").attr("title", i18next.t("ts:tsFileTooltip"));
+            $("#tsvChooseTsFile").text(i18next.t("chooseFile"));
+            $("#tsvChangeTsFile").text(i18next.t("changeFile"));
+            $("#tsvCleanupTsFile").text(i18next.t("cleanup"));
+            $("#tsvPerformFileTs").text(i18next.t("ts:performFileTs"));
+            $("#tsvResetFileTsFields").text(i18next.t("cleanUpForm"));
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+
+        function tuneCreateTsUi() {
+            var disablePerformDataTs = ($("#tscFileForTs").get(0).files[0] == undefined);
+            $("#tscPerformFileTs").prop("disabled", disablePerformDataTs);
+        }
+
+        function tuneVerifyTsUi() {
+            var disablePerformFileTs = ($("#tsvTsFile").get(0).files[0] == undefined);
+            disablePerformFileTs = disablePerformFileTs || ($("#tsvFileForTs").get(0).files[0] == undefined)
+            $("#tsvPerformFileTs").prop("disabled", disablePerformFileTs);
+        }
+
+        $("#tscResetFileTsFields").click(function () {
+            $("#tscSaveFileTs").prop("disabled", true);
+            $("#tscSaveFileTs").off("click");
+            $("#tscFileForTs").val("");
+            $("#tscFileForTs").change();
+            tuneCreateTsUi();
+        });
+
+        $("#tsvResetFileTsFields").click(function () {
+            $("#tsvFileForTs").val("");
+            $("#tsvFileForTs").change();
+            $("#tsvTsFile").val("");
+            $("#tsvTsFile").change();
+            tuneVerifyTsUi();
+        })
+
+        $("#tscFileForTs").change(function () {
+            $("#tscSaveFileTs").prop("disabled", true);
+            $("#tscSaveFileTs").off("click");
+            tuneCreateTsUi();
+        });
+        $("#tsvFileForTs").change(tuneVerifyTsUi);
+        $("#tsvTsFile").change(tuneVerifyTsUi);
+
+        $("#tscPerformFileTs").click(function () {
+            var t = new sjwsa.Ticket();
+            var file = $("#tscFileForTs").get(0).files[0];
+            t.open().then(function () {
+                t.rawData = $("#tscFileForTs").get(0).files[0];
+                return t.uploadData();
+            }).then(function () {
+                return t.createTs();
+            }).then(function () {
+                return t.downloadTsData()
+            }).then(function () {
+                alert(i18next.t("ts:tsSuccessfullyCreated"))
+                $("#tscSaveFileTs").prop("disabled", false);
+                $("#tscSaveFileTs").off("click");
+                $("#tscSaveFileTs").click(function () {
+                    saveAs(t.ts, file.name + ".ts");
+                })
+            }).catch(function (e) {
+                alert(i18next.t("ts:tsCreatingError"))
+            }).then(function () {
+                t.close()
+            })
+        })
+
+        $("#tsvPerformFileTs").click(function () {
+            var t = new sjwsa.Ticket();
+            t.open().then(function () {
+                t.rawData = $("#tsvFileForTs").get(0).files[0];
+                return t.uploadData();
+            }).then(function () {
+                t.tsData = $("#tsvTsFile").get(0).files[0];
+                return t.uploadTsData();
+            }).then(function () {
+                return t.verifyTs();
+            }).then(function () {
+                return t.getVerifyTsResult().then(function () {
+                    alert(i18next.t("ts:tsValid"))
+                }, function () {
+                    alert(i18next.t("ts:tsInvalid"))
+                })
+            }, function () {
+                alert(i18next.t("ts:tsVerifyingError"))
+            }).then(function () {
+                t.close()
+            });
+        });
+    })
+
+</script>
+<div class="mtb-default">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span id="tsCreatingTitle"></span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <label id="tscFileForTsLabel" for="tscFileForTs" class="mtb-default grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="tscFileForTsTitle"></span>
+                        </label>
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="tscChooseFileForTs" class="fileinput-new"></span>
+                                        <span id="tscChangeFileForTs" class="fileinput-exists"></span>
+                                        <input type="file" id="tscFileForTs">
+                                    </span>
+                            <a id="tscCleanupFileForTs" href="#"
+                               class="input-group-addon btn btn-default fileinput-exists"
+                               data-dismiss="fileinput"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" id="tscPerformFileTs" disabled></button>
+            <button type="button" class="btn btn-default" id="tscSaveFileTs" disabled></button>
+            <button type="button" class="btn btn-default" id="tscResetFileTsFields"></button>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span id="tsvVerifyingTitle"></span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <label id="tsvFileForTsLabel" for="tsvFileForTs" class="mtb-default grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="tsvFileForTsTitle"><span>
+                        </label>
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="tsvChooseFileForTs" class="fileinput-new"></span>
+                                        <span id="tsvChangeFileForTs" class="fileinput-exists"></span>
+                                        <input type="file" id="tsvFileForTs">
+                                    </span>
+                            <a id="tsvCleanupFileForTs" href="#"
+                               class="input-group-addon btn btn-default fileinput-exists"
+                               data-dismiss="fileinput"></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <label id="tsvTsFileLabel" for="tsvTsFile" class="mtb-default grey-tooltip" data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="tsvTsFileTitle"></span>
+                        </label>
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="tsvChooseTsFile" class="fileinput-new"></span>
+                                        <span id="tsvChangeTsFile" class="fileinput-exists"></span>
+                                        <input type="file" id="tsvTsFile">
+                                    </span>
+                            <a id="tsvCleanupTsFile" href="#" class="input-group-addon btn btn-default fileinput-exists"
+                               data-dismiss="fileinput"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" id="tsvPerformFileTs" disabled></button>
+            <button type="button" class="btn btn-default" id="tsvResetFileTsFields"></button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,352 @@
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+
+        function localizeRoutine() {
+            $("#encEncryptionParamsTitle").text(i18next.t("enc:encryptionParamsTitle"));
+            $("#encRecipientCertificateTitle").text(i18next.t("enc:recipientCertificateTitle"));
+            $("#encRecipientCertificateArea").text(i18next.t("enc:recipientCertificate"));
+            $("#encRecipientCertificateLabel").attr("title", i18next.t("enc:recipientCertificateTooltip"));
+            $("#encRecipientCertFile").attr("title", i18next.t("enc:recipientCertificateTooltip"));
+            $("#encChooseRecipientCertFile").text(i18next.t("chooseFile"));
+            $("#encChangeRecipientCertFile").text(i18next.t("changeFile"));
+            $("#encCleanupRecipientCertFile").text(i18next.t("cleanup"));
+            $("#encFileArea").text(i18next.t("file"));
+            $("#encFileForEncryptTitle").text(i18next.t("enc:fileForEncryptTitle"));
+            $("#encFileForEncryptLabel").attr("title", i18next.t("enc:fileForEncryptTooltip"));
+            $("#encChooseFileForEncrypt").text(i18next.t("chooseFile"));
+            $("#encChangeFileForEncrypt").text(i18next.t("changeFile"));
+            $("#encCleanupFileForEncrypt").text(i18next.t("cleanup"));
+            $("#encPerformDataEncryption").text(i18next.t("enc:performDataEncryption"));
+            $("#encSaveEncryptedData").text(i18next.t("enc:saveEncryptedData"));
+            $("#encResetFileFields").text(i18next.t("cleanUpForm"));
+            $("#encTextDataArea").text(i18next.t("textData"));
+            $("#encTextEncoding").text(i18next.t("encoding"));
+            $("#encUtf16LeEncoding").text(i18next.t("utf16LeEncoding"));
+            $("#encUtf8Encoding").text(i18next.t("utf8Encoding"));
+            $("#encTextForEncryptTitle").text(i18next.t("enc:textForEncryptTitle"));
+            $("#encTextForEncryptLabel").attr("title", i18next.t("enc:textForEncryptTooltip"));
+            $("#encPerformTextEncryption").text(i18next.t("enc:performDataEncryption"));
+            $("#encResetTextFields").text(i18next.t("cleanUpForm"));
+            $("#encEncryptedTextBase64Title").text(i18next.t("enc:encryptedTextBase64Title"));
+            $("#encEncryptedTextBase64Label").attr("title", i18next.t("enc:encryptedTextBase64Tooltip"));
+
+            $("#encAddWhileEncrypt").text(i18next.t("enc:addWhileEncryptTitle"));
+            $("#encSignerAndCaCertTitle").text(i18next.t("enc:signerAndCaCertTitle"));
+            $("#encSignerAndCaCertLabel").attr("title", i18next.t("enc:signerAndCaCertTooltip"));
+            $("#encSignerCertTitle").text(i18next.t("enc:signerCertTitle"));
+            $("#encSignerCertLabel").attr("title", i18next.t("enc:signerCertTooltip"));
+            $("#encNothingTitle").text(i18next.t("enc:encNothingTitle"));
+            $("#encNothingLabel").attr("title", i18next.t("enc:encNothingTooltip"));
+
+
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+
+        function clearEncryptionResultsText() {
+            $("#encEncryptedTextBase64").val("");
+        }
+
+        function clearEncryptionResultsFile() {
+            $("#encSaveEncryptedData").off("click");
+            $("#encSaveEncryptedData").prop("disabled", true);
+        }
+
+        $("#encResetFileFields").click(function () {
+            $("#encFileForEncrypt").val("");
+            $("#encFileForEncrypt").change();
+            clearEncryptionResultsFile();
+        });
+
+        $("#encResetTextFields").click(function () {
+            clearEncryptionResultsText();
+            $("#encTextForEncrypt").val("");
+            $("#encTextForEncrypt").keyup();
+        });
+
+        function tuneTextUi() {
+            var disable = ($("#encTextForEncrypt").val() == "" || $("#encRecipientCertFile").get(0).files[0] == undefined);
+            $("#encPerformTextEncryption").prop("disabled", disable);
+        }
+
+        function tuneFileUi() {
+            var disable = ($("#encFileForEncrypt").get(0).files[0] == undefined || $("#encRecipientCertFile").get(0).files[0] == undefined);
+            $("#encPerformDataEncryption").prop("disabled", disable);
+        }
+
+        $("#encTextForEncrypt").on({
+            keyup: function () {
+                tuneTextUi();
+                clearEncryptionResultsText();
+            },
+            change: function () {
+                tuneTextUi();
+                clearEncryptionResultsText();
+            }
+        });
+
+        $("#encFileForEncrypt").change(function () {
+            clearEncryptionResultsFile();
+            tuneFileUi();
+        });
+
+        $("#encRecipientCertFile").change(function () {
+            clearEncryptionResultsFile();
+            clearEncryptionResultsText();
+            tuneFileUi();
+            tuneTextUi();
+        });
+
+        function initEncryptOptions(aTicket) {
+            aTicket.embedCertificateType = $("input[name='encEmbedOption']:checked").val();
+        }
+
+        $("#encPerformTextEncryption").click(function () {
+            var t = new sjwsa.Ticket();
+            var recipientCertificatesFile = $("#encRecipientCertFile").get(0).files[0];
+            t.open().then(function () {
+                var selectedEncoding = $("input[name='encEncodingForText']:checked").val();
+                var encoder = (selectedEncoding == sjwsa.TextDataEncoding.UTF16LE) ? sjwsa.Encoders[selectedEncoding] : sjwsa.Encoders[sjwsa.TextDataEncoding.UTF8];
+                var arr = encoder.encode($("#encTextForEncrypt").val());
+                //console.log(new Uint8Array(arr));
+                t.rawData = new Uint8Array(arr);
+                return t.uploadData();
+            }).then(function () {
+                t.recipientCertificates = recipientCertificatesFile;
+                return t.uploadRecipientCertificate();
+            }).then(function () {
+                initEncryptOptions(t);
+                //console.log(t);
+                return t.setOption();
+            }).then(function () {
+                return t.encrypt();
+            }).then(function () {
+                return t.downloadEncryptedData();
+            }).then(function () {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = reader.result;
+                    var uintArray = new Uint8Array(arrayBuffer);
+                    $("#encEncryptedTextBase64").val(fromByteArray(uintArray));
+                }
+                reader.readAsArrayBuffer(t.encryptedData);
+            }).catch(function (e) {
+                alert(i18next.t("enc:encryptionError"))
+            }).then(function () {
+                t.close()
+            })
+        });
+
+
+        $("#encPerformDataEncryption").click(function () {
+            var t = new sjwsa.Ticket();
+            var file = $("#encFileForEncrypt").get(0).files[0];
+            var recipientCertificatesFile = $("#encRecipientCertFile").get(0).files[0];
+            t.open().then(function () {
+                t.rawData = file;
+                return t.uploadData();
+            }).then(function () {
+                t.recipientCertificates = recipientCertificatesFile;
+                return t.uploadRecipientCertificate();
+            }).then(function () {
+                initEncryptOptions(t);
+                return t.setOption();
+            }).then(function () {
+                return t.encrypt();
+            }).then(function () {
+                return t.downloadEncryptedData();
+            }).then(function () {
+                $("#encSaveEncryptedData").off("click");
+                $("#encSaveEncryptedData").prop("disabled", false);
+                $("#encSaveEncryptedData").click(function () {
+                    saveAs(t.encryptedData, file.name + ".p7e");
+                })
+                alert(i18next.t("enc:encryptionSuccess"));
+            }).catch(function (e) {
+                alert(i18next.t("enc:encryptionError"))
+            }).then(function () {
+                t.close()
+            })
+        });
+
+        $(".collapse").on('hide.bs.collapse', function () {
+            var spn = $(this).siblings("label:first").children("span:first");
+            spn.removeClass("glyphicon-menu-down");
+            spn.addClass("glyphicon-menu-right");
+        });
+
+        $(".collapse").on('show.bs.collapse', function () {
+            var spn = $(this).siblings("label:first").children("span:first");
+            spn.addClass("glyphicon-menu-down");
+            spn.removeClass("glyphicon-menu-right");
+        });
+
+    });
+</script>
+<div class="row">
+    <div class="col-xs-4 mtb-default">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title" id="encEncryptionParamsTitle"></div>
+            </div>
+            <div class="panel-body">
+                <div>
+                    <label data-toggle="collapse" href="#encLeftParamAreaEncryptionAddon"
+                           aria-expanded="false" aria-controls="encLeftParamAreaEncryptionAddon" role="button">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"/>
+                        <span id="encAddWhileEncrypt"></span>
+                    </label>
+                    <div id="encLeftParamAreaEncryptionAddon" class="collapse">
+                        <div class="radio ml-tool-panel">
+                            <label id="encSignerAndCaCertLabel" data-placement="top" data-toggle="tooltip" class="grey-tooltip">
+                                <input type="radio" name="encEmbedOption" value="signerAndCaCert" checked>
+                                <span id="encSignerAndCaCertTitle"></span>
+                            </label>
+                        </div>
+                        <div class="radio ml-tool-panel">
+                            <label id="encSignerCertLabel" data-placement="top" data-toggle="tooltip" class="grey-tooltip">
+                                <input type="radio" name="encEmbedOption" value="signerCert">
+                                <span id="encSignerCertTitle"></span>
+                            </label>
+                        </div>
+                        <div class="radio ml-tool-panel">
+                            <label id="encNothingLabel" data-placement="top" data-toggle="tooltip" class="grey-tooltip">
+                                <input type="radio" name="encEmbedOption" value="nothing">
+                                <span id="encNothingTitle"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="encDataPanelHolder" class="col-xs-8 mtb-default panel-group" role="tablist">
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="encRecipientCertificatePanelHeading">
+                <div class="panel-title"
+                     href="#encRecipientCertificatePanelBody"
+                     aria-controls="encRecipientCertificateBody" aria-expanded="true">
+                    <!--Uncomment block bellow to allow collapse behavior-->
+                    <!--<div class="panel-title" data-toggle="collapse" data-parent="#encDataPanelHolder"
+                         href="#encRecipientCertificatePanelBody"
+                         aria-controls="encRecipientCertificateBody" aria-expanded="true" role="button">-->
+                    <span id="encRecipientCertificateArea"></span>
+                </div>
+            </div>
+            <!--Uncomment block bellow to allow collapse behavior-->
+            <!--<div id="encRecipientCertificatePanelBody" class="panel-collapse collapse in" role="tabpanel"-->
+            <div id="encRecipientCertificatePanelBody" role="tabpanel"
+                 aria-labelledby="encRecipientCertificateHeading">
+                <div class="panel-body">
+                    <label id="encRecipientCertificateLabel" data-toggle="collapse" href="#encRecipientCertificate"
+                           aria-expanded="true" aria-controls="encRecipientCertificate" role="button">
+                        <span id="encRecipientCertificateTitle"></span>
+                    </label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="encChooseRecipientCertFile" class="fileinput-new"></span>
+                                        <span id="encChangeRecipientCertFile" class="fileinput-exists"></span>
+                                        <input type="file" id="encRecipientCertFile"/>
+                                    </span>
+                        <a id="encCleanupRecipientCertFile" href="#"
+                           class="input-group-addon btn btn-default fileinput-exists"
+                           data-dismiss="fileinput"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="encFilePanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#encDataPanelHolder"
+                     href="#encFilePanelBody"
+                     aria-controls="encFilePanelBody" aria-expanded="true" role="button">
+                    <span id="encFileArea"></span>
+                </div>
+            </div>
+            <div id="encFilePanelBody" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="encFilePanelHeading">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label id="encFileForEncryptLabel" class="mtb-default grey-tooltip" data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="encFileForEncryptTitle"></span>
+                        </label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                            <div class="form-control" data-trigger="fileinput">
+                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                <span class="fileinput-filename"></span>
+                            </div>
+                            <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="encChooseFileForEncrypt" class="fileinput-new"></span>
+                                        <span id="encChangeFileForEncrypt" class="fileinput-exists"></span>
+                                        <input type="file" id="encFileForEncrypt"/>
+                                    </span>
+                            <a id="encCleanupFileForEncrypt" href="#"
+                               class="input-group-addon btn btn-default fileinput-exists"
+                               data-dismiss="fileinput"></a>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default" id="encPerformDataEncryption" disabled></button>
+                    <button type="button" class="btn btn-default" id="encSaveEncryptedData" disabled></button>
+                    <button type="button" class="btn btn-default" id="encResetFileFields"></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="encTextPanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#encDataPanelHolder"
+                     href="#encTextPanelBody"
+                     aria-expanded="false" aria-controls="encTextPanelBody" role="button">
+                    <span id="encTextDataArea"></span>
+                </div>
+            </div>
+            <div id="encTextPanelBody" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="encTextPanelHeading">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <label id="encTextEncoding"></label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="encEncodingForText" value="UTF-16LE" checked>
+                                <span id="encUtf16LeEncoding"></span>
+                            </label>
+                            <label>
+                                <input type="radio" name="encEncodingForText" value="UTF-8">
+                                <span id="encUtf8Encoding"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="encTextForEncryptLabel" for="encTextForEncrypt" class="grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="encTextForEncryptTitle"></span>
+                        </label>
+                        <textarea id="encTextForEncrypt" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" id="encPerformTextEncryption" disabled></button>
+                        <button type="button" class="btn btn-default" id="encResetTextFields"></button>
+                    </div>
+                    <label id="encEncryptedTextBase64Label" for="encEncryptedTextBase64" class="grey-tooltip" data-placement="top"
+                           data-toggle="tooltip">
+                        <span id="encEncryptedTextBase64Title"></span>
+                    </label>
+                    <textarea id="encEncryptedTextBase64" rows="3" class="form-control" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

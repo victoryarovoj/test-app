@@ -1,0 +1,18 @@
+{
+  "tsSuccessfullyCreated" : "Timestamp successfully created.",
+  "tsCreatingError" : "Error creating timestamp.",
+  "tsValid" : "The timestamp is valid.",
+  "tsInvalid" : "The timestamp is invalid.",
+  "tsVerifyingError" : "Error verifying the timestamp.",
+  "tsCreatingTitle" : "Creation of the timestamp",
+  "dataFileTitle" : "Data file:",
+  "dataFileTooltip" : "Data file for which you want to create a timestamp",
+  "createTs" : "Create a timestamp",
+  "saveTsToFile" : "Save timestamp to file",
+  "tsVerifyingTitle" : "Verify the timestamp",
+  "fileForTsTooltip" : "Data file for which you want to verify the timestamp",
+  "fileForTsTitle" : "File to verify:",
+  "tsFileTooltip" : "File with a timestamp, the validity of which needs to be checked",
+  "tsFileTitle" : "File with a timestamp:",
+  "performFileTs" : "Verify the file with a timestamp"
+}

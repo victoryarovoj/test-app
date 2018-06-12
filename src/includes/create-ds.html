@@ -1,0 +1,552 @@
+<script type="text/javascript" language="javascript">
+
+    $(document).ready(function () {
+
+        function localizeRoutine() {
+            $("#dscDsCreateParamsTitle").text(i18next.t("ds:dsCreateParamsTitle"));
+
+            $("#dscDsTypeTitle").text(i18next.t("ds:dsTypeTitle"));
+            $("#dscDetachedDsTitle").text(i18next.t("ds:detachedDsTitle"));
+            $("#dscAttachedDsTitle").text(i18next.t("ds:attachedDsTitle"));
+            $("#dscDetachedDsLabel").attr("title", i18next.t("ds:detachedDsTooltip"));
+            $("#dscAttachedDsLabel").attr("title", i18next.t("ds:attachedDsTooltip"));
+
+            $("#dscAddDsToExistingOneLabel").attr("title", i18next.t("ds:addDsToExistingOneTooltip"));
+            $("#dscAddDsToExistingOneTitle").text(i18next.t("ds:addDsToExistingOneTitle"));
+
+            $("#dscAddToDsTitle").text(i18next.t("ds:addToDsTitle"));
+
+            $("#dscAddDataTsLabel").attr("title", i18next.t("ds:addDataTsTooltip"));
+            $("#dscAddDataTsTitle").text(i18next.t("ds:addDataTsTitle"));
+
+            $("#dscAddDsTsLabel").attr("title", i18next.t("ds:addDsTsTooltip"));
+            $("#dscAddDsTsTitle").text(i18next.t("ds:addDsTsTitle"));
+
+            $("#dscAddSignerAndCaCertsLabel").attr("title", i18next.t("ds:addSignerAndCaCertsTooltip"));
+            $("#dscAddSignerAndCaCertsTitle").text(i18next.t("ds:addSignerAndCaCertsTitle"));
+
+            $("#dscAddSignerCertAndCaInfoLabel").attr("title", i18next.t("ds:addSignerCertAndCaInfoTooltip"));
+            $("#dscAddSignerCertAndCaInfoTitle").text(i18next.t("ds:addSignerCertAndCaInfoTitle"));
+
+            $("#dscAddSignerCertLabel").attr("title", i18next.t("ds:addSignerCertTooltip"));
+            $("#dscAddSignerCertTitle").text(i18next.t("ds:addSignerCertTitle"));
+
+            $("#dscAddNothingLabel").attr("title", i18next.t("ds:addNothingTooltip"));
+            $("#dscAddNothingTitle").text(i18next.t("ds:addNothingTitle"));
+
+            $("#dscFileArea").text(i18next.t("file"));
+
+            $("#dscFileForDsLabel").attr("title", i18next.t("ds:fileForDsTooltip"));
+            $("#dscFileForDsTitle").text(i18next.t("ds:fileForDsTitle"));
+            $("#dscChooseFileForDs").text(i18next.t("chooseFile"));
+            $("#dscChangeFileForDs").text(i18next.t("changeFile"));
+            $("#dscCleanupFileForDs").text(i18next.t("cleanup"));
+
+            $("#dscMetaDataFileForDsLabel").attr("title", i18next.t("ds:metaDataFileForDsTooltip"));
+            $("#dscMetaDataFileForDsTitle").text(i18next.t("ds:metaDataFileForDsTitle"));
+
+            $("#dscPrevisionDsFileLabel").attr("title", i18next.t("ds:previsionDsFileTooltip"));
+            $("#dscPrevisionDsFileTitle").text(i18next.t("ds:previsionDsFileTitle"));
+            $("#dscChoosePrevisionDsFile").text(i18next.t("chooseFile"));
+            $("#dscChangePrevisionDsFile").text(i18next.t("changeFile"));
+            $("#dscCleanupPrevisionDsFile").text(i18next.t("cleanup"));
+
+            $("#dscPerformFileDs").text(i18next.t("ds:createDs"));
+            $("#dscSaveFileDs").text(i18next.t("ds:saveDsToFile"));
+            $("#dscResetFileForDsFields").text(i18next.t("cleanUpForm"));
+
+            $("#dscTextDataArea").text(i18next.t("textData"));
+
+            $("#dscTextEncoding").text(i18next.t("encoding"));
+            $("#dscUtf16LeEncoding").text(i18next.t("utf16LeEncoding"));
+            $("#dscUtf8Encoding").text(i18next.t("utf8Encoding"));
+
+            $("#dscTextForDsLabel").attr("title", i18next.t("ds:textForDsTooltip"));
+            $("#dscTextForDsTitle").text(i18next.t("ds:textForDsTitle"));
+
+            $("#dscMetaDataForDsTextLabel").attr("title", i18next.t("ds:metaDataFileForDsTooltip"));
+            $("#dscMetaDataForDsTextTitle").text(i18next.t("ds:metaDataFileForDsTitle"));
+
+            $("#dscPrevisionDsBase64Label").attr("title", i18next.t("ds:previsionDsBase64Tooltip"));
+            $("#dscPrevisionDsBase64Title").text(i18next.t("ds:previsionDsBase64Title"));
+
+            $("#dscPerformTextDs").text(i18next.t("ds:createDs"));
+            $("#dscResetTextDsFields").text(i18next.t("cleanUpForm"));
+
+            $("#dscDsBase64Label").attr("title", i18next.t("ds:dscBase64Tooltip"));
+            $("#dscDsBase64Title").text(i18next.t("ds:dscBase64Title"));
+
+
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+
+        $("#dscResetTextDsFields").click(function () {
+            $("#dscMetaDataForDsText").val("");
+            $("#dscTextForDs").val("");
+            $("#dscPrevisionDsBase64").val("");
+            $("#dscTextForDs").keyup();
+        });
+
+        $("#dscResetFileForDsFields").click(function () {
+            $("#dscFileForDs").val("");
+            $("#dscFileForDs").change();
+            $("#dscPrevisionDsFile").val("");
+            $("#dscPrevisionDsFile").change();
+            $("#dscMetaDataFileForDs").val("");
+        });
+
+        function clearCreationResultsTextDs() {
+            $("#dscDsBase64").val("");
+        }
+
+        function clearCreationResultsFileDs() {
+            $("#dscSaveFileDs").off("click");
+            $("#dscSaveFileDs").prop("disabled", true);
+        }
+
+        function tuneTextUi() {
+            var isMultipleDs = $("#dscDataToSignQualifier").prop("checked");
+            var isAttachedDs = ($("input[name='dscSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED);
+            var textForDsIsEmpty = ($("#dscTextForDs").val() == "");
+            var previsionDsIsEmpty = ($("#dscPrevisionDsBase64").val() == "");
+            var disablePerformTextDs = (isMultipleDs && (previsionDsIsEmpty || (!isAttachedDs && textForDsIsEmpty)))
+                || (!isMultipleDs && textForDsIsEmpty);
+
+            if (isMultipleDs) {
+                $("#dscPrevisionDsBase64Group").show();
+                if (isAttachedDs) {
+                    $("#dscTextForDsGroup").hide();
+                } else {
+                    $("#dscTextForDsGroup").show();
+                }
+            } else {
+                $("#dscPrevisionDsBase64Group").hide();
+                $("#dscTextForDsGroup").show();
+            }
+            $("#dscPerformTextDs").prop("disabled", disablePerformTextDs);
+        }
+
+        function tuneFileUi() {
+            var isMultipleDs = $("#dscDataToSignQualifier").prop("checked");
+            var isAttachedDs = ($("input[name='dscSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED);
+            var fileForDsIsEmpty = ($("#dscFileForDs").get(0).files[0] == undefined);
+            var previsionDsIsEmpty = ($("#dscPrevisionDsFile").get(0).files[0] == undefined);
+            var disablePerformFileDs = (isMultipleDs && (previsionDsIsEmpty || (!isAttachedDs && fileForDsIsEmpty)))
+                || (!isMultipleDs && fileForDsIsEmpty);
+
+            if (isMultipleDs) {
+                $("#dscPrevisionDsFileGroup").show();
+                if (isAttachedDs) {
+                    $("#dscFileForDsGroup").hide();
+                } else {
+                    $("#dscFileForDsGroup").show();
+                }
+            } else {
+                $("#dscPrevisionDsFileGroup").hide();
+                $("#dscFileForDsGroup").show();
+            }
+            $("#dscPerformFileDs").prop("disabled", disablePerformFileDs);
+        }
+
+        $("#dscTextForDs, #dscPrevisionDsBase64").on({
+            keyup: function () {
+                clearCreationResultsTextDs();
+                tuneTextUi();
+
+            },
+            change: function () {
+                clearCreationResultsTextDs();
+                tuneTextUi();
+            }
+        });
+
+        $("#dscFileForDs").change(function () {
+            clearCreationResultsFileDs();
+            try {
+                $("#dscMetaDataFileForDs").val($("#dscFileForDs").get(0).files[0].name);
+            } catch (e) {
+            }
+            tuneFileUi();
+        });
+
+        $("#dscPrevisionDsFile").change(function () {
+            clearCreationResultsFileDs();
+            tuneFileUi();
+        });
+
+        $("input[name='dscSignatureType'],#dscDataToSignQualifier,#dscSignatureTs,#dscDataTs,input[name='dscEmbedOption']").change(function () {
+            clearCreationResultsTextDs();
+            clearCreationResultsFileDs();
+            tuneFileUi();
+            tuneTextUi();
+        });
+
+        tuneTextUi();
+        tuneFileUi();
+
+        function initDsCreateOptions(aTicket) {
+            aTicket.signatureType = $("input[name='dscSignatureType']:checked").val();
+            aTicket.embedSignatureTs = $("#dscSignatureTs").prop("checked") ? "true" : "false";
+            aTicket.embedDataTs = $("#dscDataTs").prop("checked") ? "true" : "false";
+            aTicket.embedCertificateType = $("input[name='dscEmbedOption']:checked").val();
+            if ($("#dscDataToSignQualifier").prop("checked")) {
+                aTicket.dataToSignQualifier = sjwsa.DataToSignQualifier.ALREADY_SIGNED;
+            }
+        }
+
+        $("#dscPerformTextDs").click(function () {
+            var t = new sjwsa.Ticket();
+            var isMultipleDs = $("#dscDataToSignQualifier").prop("checked");
+            var isAttachedDs = ($("input[name='dscSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED);
+            if (isMultipleDs) {
+                try {
+                    var arr = toByteArray($("#dscPrevisionDsBase64").val());
+                    var dsData = new Uint8Array(arr);
+                } catch (e) {
+                    alert(i18next.t("ds:illegalBase64SignatureFormat"));
+                    return;
+                }
+            }
+
+            clearCreationResultsTextDs();
+
+            t.open().then(function () {
+                if ((isMultipleDs && !isAttachedDs) || (!isMultipleDs)) {
+                    var selectedEncoding = $("input[name='dscEncodingForText']:checked").val();
+                    var encoder = (selectedEncoding == sjwsa.TextDataEncoding.UTF16LE) ? sjwsa.Encoders[selectedEncoding] : sjwsa.Encoders[sjwsa.TextDataEncoding.UTF8];
+                    var arr = encoder.encode($("#dscTextForDs").val());
+                    t.rawData = new Uint8Array(arr);
+                    return t.uploadData();
+                }
+                return;
+            }).then(function () {
+                if (isMultipleDs) {
+                    t.dsData = dsData;
+                    return t.uploadDsData();
+                }
+                return;
+            }).then(function () {
+                if ((isMultipleDs && !isAttachedDs) || (!isMultipleDs)) {
+                    t.metaData = $("#dscMetaDataForDsText").val();
+                    return t.updateMetadata();
+                }
+                return;
+            }).then(function () {
+                initDsCreateOptions(t);
+                //console.log(t);
+                return t.setOption();
+            }).then(function () {
+                return t.createDs();
+            }).then(function () {
+                return t.downloadDsData();
+            }).then(function () {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = reader.result;
+                    var uintArray = new Uint8Array(arrayBuffer);
+                    $("#dscDsBase64").val(fromByteArray(uintArray));
+                }
+                reader.readAsArrayBuffer(t.ds);
+                alert(i18next.t("ds:dsSuccessfullyCreated"))
+            }).catch(function (e) {
+                alert(i18next.t("ds:dsCreatingError"))
+            }).then(function () {
+                t.close()
+            })
+        });
+
+        $("#dscPerformFileDs").click(function () {
+            var t = new sjwsa.Ticket();
+            var isMultipleDs = $("#dscDataToSignQualifier").prop("checked");
+            var isAttachedDs = ($("input[name='dscSignatureType']:checked").val() == sjwsa.SignatureType.ATTACHED);
+            var file = $("#dscFileForDs").get(0).files[0];
+            var prevDsFile = $("#dscPrevisionDsFile").get(0).files[0];
+
+            clearCreationResultsFileDs();
+
+            t.open().then(function () {
+                if ((isMultipleDs && !isAttachedDs) || (!isMultipleDs)) {
+                    t.rawData = file;
+                    return t.uploadData();
+                }
+                return;
+            }).then(function () {
+                if ((isMultipleDs && !isAttachedDs) || (!isMultipleDs)) {
+                    t.metaData = $("#dscMetaDataFileForDs").val();
+                    return t.updateMetadata();
+                }
+                return;
+            }).then(function () {
+                if (isMultipleDs) {
+                    t.dsData = prevDsFile;
+                    return t.uploadDsData();
+                }
+                return;
+            }).then(function () {
+                initDsCreateOptions(t);
+                return t.setOption();
+            }).then(function () {
+                return t.createDs();
+            }).then(function () {
+                return t.downloadDsData();
+            }).then(function () {
+                $("#dscSaveFileDs").off("click");
+                $("#dscSaveFileDs").prop("disabled", false);
+                $("#dscSaveFileDs").click(function () {
+                    saveAs(t.ds, isMultipleDs ? prevDsFile.name : (file.name + ".p7s"));
+                })
+                alert(i18next.t("ds:dsSuccessfullyCreated"));
+            }).catch(function (e) {
+                alert(i18next.t("ds:dsCreatingError"));
+            }).then(function () {
+                t.close()
+            })
+        })
+
+        //$('[data-toggle="tooltip"]').tooltip();
+
+        $(".collapse").on('hide.bs.collapse', function () {
+            var spn = $(this).siblings("label:first").children("span:first");
+            spn.removeClass("glyphicon-menu-down");
+            spn.addClass("glyphicon-menu-right");
+        })
+
+        $(".collapse").on('show.bs.collapse', function () {
+            var spn = $(this).siblings("label:first").children("span:first");
+            spn.addClass("glyphicon-menu-down");
+            spn.removeClass("glyphicon-menu-right");
+        })
+
+    })
+</script>
+<div class="row">
+    <div class="col-xs-4 mtb-default">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title" id="dscDsCreateParamsTitle"></div>
+            </div>
+            <div id="dscLeftParamArea" class="panel-body">
+                <div>
+                    <label data-toggle="collapse" href="#dscLeftParamAreaDsType"
+                           aria-expanded="true" aria-controls="dscLeftParamAreaDsType" role="button">
+                        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"/>
+                        <span id="dscDsTypeTitle"></span>
+                    </label>
+                    <div id="dscLeftParamAreaDsType" class="collapse in">
+                        <div class="form-group">
+                            <div class="radio ml-tool-panel">
+                                <label id="dscAttachedDsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscSignatureType" value="attached">
+                                    <span id="dscAttachedDsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dscDetachedDsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscSignatureType" value="detached" checked>
+                                    <span id="dscDetachedDsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="checkbox ml-tool-panel">
+                                <label id="dscAddDsToExistingOneLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="checkbox" id="dscDataToSignQualifier">
+                                    <span id="dscAddDsToExistingOneTitle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label data-toggle="collapse" href="#dscLeftParamAreaDsAddon"
+                           aria-expanded="false" aria-controls="dscLeftParamAreaDsAddon" role="button">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"/>
+                        <span id="dscAddToDsTitle"></span>
+                    </label>
+                    <div id="dscLeftParamAreaDsAddon" class="collapse">
+                        <div class="form-group">
+                            <div class="checkbox ml-tool-panel">
+                                <label id="dscAddDataTsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="checkbox" id="dscDataTs" checked>
+                                    <span id="dscAddDataTsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="checkbox ml-tool-panel">
+                                <label id="dscAddDsTsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="checkbox" id="dscSignatureTs" checked>
+                                    <span id="dscAddDsTsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dscAddSignerAndCaCertsLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscEmbedOption" value="signerAndCaCert" checked>
+                                    <span id="dscAddSignerAndCaCertsTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dscAddSignerCertAndCaInfoLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscEmbedOption" value="signerCertAndCaInfo">
+                                    <span id="dscAddSignerCertAndCaInfoTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dscAddSignerCertLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscEmbedOption" value="signerCert">
+                                    <span id="dscAddSignerCertTitle"></span>
+                                </label>
+                            </div>
+                            <div class="radio ml-tool-panel">
+                                <label id="dscAddNothingLabel" data-placement="top" data-toggle="tooltip"
+                                       class="grey-tooltip">
+                                    <input type="radio" name="dscEmbedOption" value="nothing">
+                                    <span id="dscAddNothingTitle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dscDataPanelHolder" class="col-xs-8 mtb-default panel-group" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="dscFilePanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#dscDataPanelHolder"
+                     href="#dscFilePanelBody"
+                     aria-controls="dscFilePanelBody" aria-expanded="true" role="button">
+                    <span id="dscFileArea"></span>
+                </div>
+            </div>
+            <div id="dscFilePanelBody" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="dscFilePanelHeading">
+                <div class="panel-body">
+                    <div id="dscFileForDsGroup">
+                        <div class="form-group">
+                            <label id="dscFileForDsLabel" class="mtb-default grey-tooltip" data-placement="top"
+                                   data-toggle="tooltip">
+                                <span id="dscFileForDsTitle"></span>
+                            </label>
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename"></span>
+                                </div>
+                                <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="dscChooseFileForDs" class="fileinput-new"></span>
+                                        <span id="dscChangeFileForDs" class="fileinput-exists"></span>
+                                        <input type="file" id="dscFileForDs">
+                                    </span>
+                                <a id="dscCleanupFileForDs" href="#"
+                                   class="input-group-addon btn btn-default fileinput-exists"
+                                   data-dismiss="fileinput"></a>
+                            </div>
+                            <label id="dscMetaDataFileForDsLabel" for="dscMetaDataFileForDs" data-placement="top"
+                                   data-toggle="tooltip"
+                                   class="grey-tooltip">
+                                <span id="dscMetaDataFileForDsTitle"></span>
+                            </label>
+                            <input type="text" id="dscMetaDataFileForDs" class="form-control">
+                        </div>
+                    </div>
+                    <div id="dscPrevisionDsFileGroup">
+                        <div class="form-group">
+                            <label id="dscPrevisionDsFileLabel" class="mtb-default grey-tooltip" data-placement="top"
+                                   data-toggle="tooltip">
+                                <span id="dscPrevisionDsFileTitle"></span>
+                            </label>
+                            <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                <div class="form-control" data-trigger="fileinput">
+                                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                    <span class="fileinput-filename"></span>
+                                </div>
+                                <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="dscChoosePrevisionDsFile" class="fileinput-new"></span>
+                                        <span id="dscChangePrevisionDsFile" class="fileinput-exists"></span>
+                                        <input type="file" id="dscPrevisionDsFile">
+                                    </span>
+                                <a id="dscCleanupPrevisionDsFile" href="#"
+                                   class="input-group-addon btn btn-default fileinput-exists"
+                                   data-dismiss="fileinput"></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-default" id="dscPerformFileDs" disabled></button>
+                    <button type="button" class="btn btn-default" id="dscSaveFileDs" disabled></button>
+                    <button type="button" class="btn btn-default" id="dscResetFileForDsFields"></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="dscTextPanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#dscDataPanelHolder"
+                     href="#dscTextPanelBody"
+                     aria-expanded="false" aria-controls="dscTextPanelBody" role="button">
+                    <span id="dscTextDataArea"></span>
+                </div>
+            </div>
+            <div id="dscTextPanelBody" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="dscTextPanelHeading">
+                <div class="panel-body">
+                    <div class="form-group" id="dscTextForDsGroup">
+                        <div class="form-inline">
+                            <label id="dscTextEncoding"></label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="dscEncodingForText" value="UTF-16LE" checked>
+                                    <span id="dscUtf16LeEncoding"></span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="dscEncodingForText" value="UTF-8">
+                                    <span id="dscUtf8Encoding"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label id="dscTextForDsLabel" for="dscTextForDs" class="grey-tooltip" data-placement="top"
+                                   data-toggle="tooltip">
+                                <span id="dscTextForDsTitle"></span>
+                            </label>
+                            <textarea id="dscTextForDs" rows="2" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label id="dscMetaDataForDsTextLabel" for="dscMetaDataForDsText" class="grey-tooltip"
+                                   data-placement="top"
+                                   data-toggle="tooltip">
+                                <span id="dscMetaDataForDsTextTitle"></span>
+                            </label>
+                            <input type="text" id="dscMetaDataForDsText" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group" id="dscPrevisionDsBase64Group">
+                        <label id="dscPrevisionDsBase64Label" for="dscPrevisionDsBase64" class="grey-tooltip"
+                               data-placement="top"
+                               data-toggle="tooltip">
+                            <span id="dscPrevisionDsBase64Title"></span>
+                        </label>
+                        <textarea id="dscPrevisionDsBase64" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" id="dscPerformTextDs" disabled></button>
+                        <button type="button" class="btn btn-default" id="dscResetTextDsFields"></button>
+                    </div>
+                    <label id="dscDsBase64Label" for="dscDsBase64" class="mtb-default grey-tooltip" data-placement="top" data-toggle="tooltip">
+                        <span id="dscDsBase64Title"></span>
+                    </label>
+                    <textarea id="dscDsBase64" rows="3" class="form-control" readonly> </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

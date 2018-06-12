@@ -1,9 +1,14 @@
 import React from 'react'
-import ReactDom from 'react-dom'
+import { render } from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import Root from './containers/Root'
-import store from './store/store'
+import configureStore from './store/configureStore'
 
-ReactDom.render(
-		<Root store={store}/>,
-	document.getElementById('root')
-);
+const store = configureStore()
+
+render(
+  <Router>
+    <Root store={store} />
+  </Router>,
+  document.getElementById('root')
+)

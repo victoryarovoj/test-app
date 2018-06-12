@@ -1,0 +1,224 @@
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+
+        function localizeRoutine() {
+            $("#decFileArea").text(i18next.t("file"));
+            $("#decEncryptedFileTitle").text(i18next.t("dec:encryptedFileTitle"));
+            $("#decEncryptedFileLabel").attr("title", i18next.t("dec:encryptedFileTooltip"));
+            $("#decChooseEncryptedFile").text(i18next.t("chooseFile"));
+            $("#decChangeEncryptedFile").text(i18next.t("changeFile"));
+            $("#decCleanupEncryptedFile").text(i18next.t("cleanup"));
+            $("#decPerformBinaryDataDecryption").text(i18next.t("dec:performBinaryDataDecryption"));
+            $("#decResetBinaryDataFields").text(i18next.t("cleanUpForm"));
+            $("#decSaveBinaryDecryptedData").text(i18next.t("dec:saveBinaryDecryptedData"));
+            $("#decTextDataArea").text(i18next.t("textData"));
+            $("#decTextEncoding").text(i18next.t("encoding"));
+            $("#decUtf16LeEncoding").text(i18next.t("utf16LeEncoding"));
+            $("#decUtf8Encoding").text(i18next.t("utf8Encoding"));
+            $("#decEncryptedBase64DataTitle").text(i18next.t("dec:encryptedBase64DataTitle"));
+            $("#decPerformBase64DataDecryption").text(i18next.t("dec:performBinaryDataDecryption"));
+            $("#decResetBase64DataFields").text(i18next.t("cleanUpForm"));
+            $("#decDecryptedTextBase64Title").text(i18next.t("dec:decryptedTextBase64Title"));
+        }
+
+        i18next.on('languageChanged', function (lng) {
+            localizeRoutine();
+        });
+
+        localizeRoutine();
+
+        function clearVerifyResultsBinaryData() {
+            $("#decSaveBinaryDecryptedData").off("click");
+            $("#decSaveBinaryDecryptedData").prop("disabled", true);
+        }
+
+        function clearVerifyResultsBase64Data() {
+            $("#decDecryptedTextBase64").val("");
+        }
+
+        $("#decResetBinaryDataFields").click(function () {
+            $("#decEncryptedFile").val("");
+            $("#decEncryptedFile").change();
+            clearVerifyResultsBase64Data();
+        });
+
+        $("#decResetBase64DataFields").click(function () {
+            $("#decEncryptedBase64Data").val("");
+            $("#decEncryptedBase64Data").keyup();
+            clearVerifyResultsBase64Data();
+        });
+
+        function tuneTextUi() {
+            var disable = ($("#decEncryptedBase64Data").val() == "");
+            $("#decPerformBase64DataDecryption").prop("disabled", disable);
+        }
+
+        function tuneFileUi() {
+            var disable = ($("#decEncryptedFile").get(0).files[0] == undefined);
+            $("#decPerformBinaryDataDecryption").prop("disabled", disable);
+        }
+
+        $("#decEncryptedFile").change(function () {
+            tuneFileUi();
+            clearVerifyResultsBinaryData();
+        });
+
+        $("#decEncryptedBase64Data").on({
+            keyup: function () {
+                tuneTextUi();
+                clearVerifyResultsBase64Data();
+            },
+            change: function () {
+                tuneTextUi();
+                clearVerifyResultsBase64Data();
+            }
+        });
+
+        $("#decPerformBase64DataDecryption").click(function () {
+            try {
+                var arr = toByteArray($("#decEncryptedBase64Data").val());
+                var encryptedData = new Uint8Array(arr);
+            } catch (e) {
+                alert(i18next.t("dec:wrongEncDataInBase64"));
+                return;
+            }
+            var t = new sjwsa.Ticket();
+            t.open().then(function () {
+                t.rawData = encryptedData;
+                return t.uploadData();
+            }).then(function () {
+                return t.decrypt();
+            }).then(function () {
+                return t.downloadDecryptedData();
+            }).then(function () {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var arrayBuffer = reader.result;
+                    var uintArray = new Uint8Array(arrayBuffer);
+                    var selectedEncoding = $("input[name='decEncodingForText']:checked").val();
+                    var encoder = (selectedEncoding == sjwsa.TextDataEncoding.UTF16LE) ? sjwsa.Encoders[selectedEncoding] : sjwsa.Encoders[sjwsa.TextDataEncoding.UTF8];
+                    $("#decDecryptedTextBase64").val(encoder.decode(uintArray));
+                }
+                reader.readAsArrayBuffer(t.decryptedData);
+            }).catch(function (e) {
+                alert(i18next.t("dec:decryptionError"))
+            }).then(function () {
+                t.close()
+            })
+        });
+
+        $("#decPerformBinaryDataDecryption").click(function () {
+            var t = new sjwsa.Ticket();
+            var file = $("#decEncryptedFile").get(0).files[0];
+            t.open().then(function () {
+                t.rawData = file;
+                return t.uploadData();
+            }).then(function () {
+                return t.decrypt();
+            }).then(function () {
+                return t.downloadDecryptedData();
+            }).then(function () {
+                $("#decSaveBinaryDecryptedData").off("click");
+                $("#decSaveBinaryDecryptedData").prop("disabled", false);
+                $("#decSaveBinaryDecryptedData").click(function () {
+                    saveAs(
+                        t.decryptedData,
+                        file.name.lastIndexOf(".") < 2 ? file.name : file.name.substr(0, file.name.lastIndexOf("."))
+                    );
+                });
+                alert(i18next.t("dec:decryptionSuccess"));
+            }).catch(function (e) {
+                alert(i18next.t("dec:decryptionError"))
+            }).then(function () {
+                t.close()
+            })
+        })
+
+    })
+
+</script>
+<div class="row">
+    <div id="decDataPanelHolder" class="col-xs-12 mtb-default panel-group" role="tablist">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="decFilePanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#decDataPanelHolder"
+                     href="#decFilePanelBody"
+                     aria-controls="decFilePanelBody" aria-expanded="true" role="button">
+                    <span id="decFileArea"></span>
+                </div>
+            </div>
+            <div id="decFilePanelBody" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="decFilePanelHeading">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <label id="decEncryptedFileLabel" class="mtb-default grey-tooltip" data-placement="top"
+                                       data-toggle="tooltip">
+                                    <span id="decEncryptedFileTitle"><span>
+                                </label>
+                            </div>
+                            <div class="col-xs-7">
+                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                    <div class="form-control" data-trigger="fileinput">
+                                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                        <span class="fileinput-filename"></span>
+                                    </div>
+                                    <span class="input-group-addon btn btn-default btn-file">
+                                        <span id="decChooseEncryptedFile" class="fileinput-new"></span>
+                                        <span id="decChangeEncryptedFile" class="fileinput-exists"></span>
+                                        <input type="file" id="decEncryptedFile">
+                                    </span>
+                                    <a id="decCleanupEncryptedFile" href="#"
+                                       class="input-group-addon btn btn-default fileinput-exists"
+                                       data-dismiss="fileinput"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-default" id="decPerformBinaryDataDecryption" disabled></button>
+                    <button type="button" class="btn btn-default" id="decSaveBinaryDecryptedData" disabled></button>
+                    <button type="button" class="btn btn-default" id="decResetBinaryDataFields"></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="decTextPanelHeading">
+                <div class="panel-title" data-toggle="collapse" data-parent="#decDataPanelHolder"
+                     href="#decTextPanelBody"
+                     aria-expanded="false" aria-controls="decTextPanelBody" role="button">
+                    <span id="decTextDataArea"></span>
+                </div>
+            </div>
+            <div id="decTextPanelBody" class="panel-collapse collapse" role="tabpanel"
+                 aria-labelledby="decTextPanelHeading">
+                <div class="panel-body">
+                    <div class="form-inline">
+                        <label id="decTextEncoding"></label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="decEncodingForText" value="UTF-16LE" checked>
+                                <span id="decUtf16LeEncoding"></span>
+                            </label>
+                            <label>
+                                <input type="radio" name="decEncodingForText" value="UTF-8">
+                                <span id="decUtf8Encoding"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label id="decEncryptedBase64DataTitle" for="decEncryptedBase64Data"></label>
+                        <textarea id="decEncryptedBase64Data" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" id="decPerformBase64DataDecryption" disabled></button>
+                        <button type="button" class="btn btn-default" id="decResetBase64DataFields"></button>
+                    </div>
+                    <label id="decDecryptedTextBase64Title" for="decDecryptedTextBase64"></label>
+                    <textarea id="decDecryptedTextBase64" rows="3" class="form-control" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
