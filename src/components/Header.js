@@ -5,11 +5,8 @@ import { languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
 import logo from '../img/sjwsa-client-logo.png'
 
-class TestHeader extends Component {
-	constructor(props) {
-    	super(props);
 
-    }
+class TestHeader extends Component {
 
     changeLang(lang){
 		var availableLanguege = ["en", "uk", "pl"];
@@ -20,30 +17,25 @@ class TestHeader extends Component {
 	render() {
 		return (
 			<div>
-			    <div className="row mtb-default">
-			        <div className="col-xs-1 text-left">
-			            <img src={logo} width="64" height="64" alt="Logo" />
-			        </div>
-			        <div className="col-xs-8 text-left">
-			            <h3 className="mtb-default" id="clientForService"></h3>
-			 			{i18next.t("clientForService" : "clientForService")}
-			 			<div className="col-xs-8 text-left">
-				            <h3 className="mtb-default" id="titleCipherBis"></h3>
-				 			<p>{i18next.t("titleCipherBis" : "titleCipherBis")}</p>
-				        </div>
-			        </div>
-			        
-			        <div className="col-xs-3 text-center text-muted">
-			            <div className="serviceDisconnected" id="serviceConnectionStatus" align="right">
-			                {i18next.t("serviceNotConnected" : "serviceNotConnected")}
-			            </div>
-			        </div>
-			    </div>
+			<div className="row mtb-default">
+		        <div className="col-xs-1 text-left">
+		            <img src={logo} width="64" height="64" alt="Logo" />
+		        </div>
+		        <div className="col-xs-8 text-left text-muted">
+		            <h3 className="mtb-default" id="clientForService">{i18next.t("clientForService" : "clientForService")}</h3>
+		            <span id="titleCipherBis">{i18next.t("titleCipherBis" : "titleCipherBis")}</span>
+		        </div>
+		        <div className="col-xs-3 text-center text-muted">
+		            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{padding: "10px"}}>
+		            	{i18next.t("serviceNotConnected" : "serviceNotConnected")}
+		            </div>
+		        </div>
+		    </div>
 			    <div className="row">
 			        <div id="languageButtonLine" className="col-xs-12 text-right">
-			        	<button onClick={this.changeLang.bind(this, "uk")}>setLng</button>
-						<button onClick={this.changeLang.bind(this, "pl")}>setLng</button>
-						<button onClick={this.changeLang.bind(this, "en")}>setLng</button>
+			        	<button onClick={this.changeLang.bind(this, "uk")}>УКР</button>
+						<button onClick={this.changeLang.bind(this, "pl")}>PLN</button>
+						<button onClick={this.changeLang.bind(this, "en")}>ENG</button>
 			        </div>
 			    </div>
 			    <hr style={{marginTop: "7px", marginBottom: "7px"}} />

@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
 import localesReducer from './i18n'
 import dafaultState from './client';
 

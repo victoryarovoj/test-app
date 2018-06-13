@@ -68,7 +68,6 @@ export const getLocaleResourcePath = (lng) => (dispatch) => {
 }
 
 export const languageSwitchItem = (aDisplayTitle, aLanguageCode, aItems) => (dispatch) => {
-    var __this = this;
     this.items = aItems;
     this.displayTitle = aDisplayTitle;
     this.languageCode = aLanguageCode;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from './Header';
-import Uploader from './Uploader';
+// import 'bootstrap/dist/css/bootstrap.css';
 import '../css/sjwsa-client-0.1.css'
 
 class App extends Component {
@@ -9,7 +9,6 @@ class App extends Component {
 		return (
 			<div>
 				<Header />
-			   
 			</div>
 		);
 	}

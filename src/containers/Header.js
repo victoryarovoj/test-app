@@ -4,17 +4,8 @@ import { testAction, getStatus, getFeatures, testInit, getLanguage, getLocaleRes
 import { bindActionCreators } from 'redux';
 import TestHeader from '../components/Header';
 import TestBody from '../components/TestBody';
-import i18next from 'i18next'
-
-var Translate = require('react-redux-i18n').Translate;
-var Localize = require('react-redux-i18n').Localize;
-var I18n = require('react-redux-i18n').I18n;
 
 class Header extends Component {
-	constructor(props) {
-    	super(props);
-
-    }
 
 	componentDidMount() {
 		var availableLanguege = [];

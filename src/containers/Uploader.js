@@ -1,5 +1,4 @@
 import React from 'react';
-import { sjwsa } from "../libs/sjwsa-client-1.1";
 import 'bootstrap/dist/css/bootstrap.css';
 
 class Uploader extends React.Component {
