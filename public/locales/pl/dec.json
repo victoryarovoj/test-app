@@ -1,0 +1,11 @@
+﻿{
+  "wrongEncDataInBase64" : "Nieprawidłowy format szyfrowanych danych w kodowaniu Base64.",
+  "decryptionError" : "Pomyłka podczas rozszyfrowywania.",
+  "decryptionSuccess" : "Rozszyfrowanie zakończone sukcesem.",
+  "encryptedFileTooltip" : "Plik, który należy rozszyfrować",
+  "encryptedFileTitle" : "Plik do rozszyfrowania:",
+  "performBinaryDataDecryption" : "Rozszyfruj",
+  "saveBinaryDecryptedData" : "Zapisz rozszyfrowane dane jako",
+  "encryptedBase64DataTitle" : "zaszyfrowane dane w kodowaniu Base64:",
+  "decryptedTextBase64Title" : "Rozszyfrowany tekst:"
+}

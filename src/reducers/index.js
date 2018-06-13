@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+import localesReducer from './i18n'
 import dafaultState from './client';
 
 const base = (state = {}, { type, payload }) => {
@@ -41,7 +42,7 @@ const base = (state = {}, { type, payload }) => {
 
 export default combineReducers({
     base: base,
-    i18n: i18nReducer,
+    localesReducer: localesReducer,
     dafaultState: dafaultState
 });
 

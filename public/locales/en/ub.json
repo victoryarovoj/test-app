@@ -1,0 +1,6 @@
+{
+  "browserIsNotSupported" : "The browser that you use to work is not supported by this application",
+  "supportedBrowsers" : "Supported models and versions of browsers:",
+  "version" : "version",
+  "andLater" : "and later"
+}

@@ -1,0 +1,18 @@
+﻿{
+  "tsSuccessfullyCreated" : "Znacznik czasu stworzono z suksesem.",
+  "tsCreatingError" : "Błąd podczas tworzenia znacznika czasu.",
+  "tsValid" : "Aktualny znacznik czasu.",
+  "tsInvalid" : "Nieaktualny znacznik czasu.",
+  "tsVerifyingError" : "Błąd podczas sprawdzania znacznika czasu.",
+  "tsCreatingTitle" : "Stwórz znacznik czasu",
+  "dataFileTitle" : "Plik z danymi:",
+  "dataFileTooltip" : "Plik z danymi, dla ktorych należy stworzyć znacznik czasu",
+  "createTs" : "Stwórz znacznik czasu",
+  "saveTsToFile" : "Zapisz znacznik jako",
+  "tsVerifyingTitle" : "Sprawdź znacznik czasu",
+  "fileForTsTooltip" : "Plik z danymi, odnośnie których należy dokonać sprawdzenia znacznika czasu",
+  "fileForTsTitle" : "Plik do sprawdzenia:",
+  "tsFileTooltip" : "Plik ze znacznikiem czasu, którego wiarygodność należy sprawdzić",
+  "tsFileTitle" : "Plik ze znacznikiem czasu:",
+  "performFileTs" : "Kontrola znacznika czasu"
+}

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { testAction, getStatus, getFeatures, testInit } from '../actions/test-action';
+import { testAction, getStatus, getFeatures, testInit, getLanguage, getLocaleResourcePath, languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
 import TestHeader from '../components/Header';
+import TestBody from '../components/TestBody';
+import i18next from 'i18next'
 
 var Translate = require('react-redux-i18n').Translate;
 var Localize = require('react-redux-i18n').Localize;
@@ -15,25 +17,28 @@ class Header extends Component {
     }
 
 	componentDidMount() {
-		this.props.testAction();
-		this.props.getStatus();
-		this.props.getFeatures();
-		this.props.testInit();
+		var availableLanguege = [];
+		this.props.actions.languageSwitchItem('укр', 'uk', availableLanguege);
+		// this.props.testAction();
+		// this.props.getStatus();
+		// this.props.getFeatures();
+		// this.props.testInit();
+		// this.props.getLanguage();
+		// this.props.getLocaleResourcePath(this.props.getLanguage());
 	}
 	// <TestHeader />
 
-	edit () {
-		alert("dsgghsdg");
-	}
+	changeLang(lang){
+		var availableLanguege = [];
+        this.props.actions.languageSwitchItem('eng', lang, availableLanguege);
+        
+    }
 
 	render() {
-		console.log(this.props.status);
-		console.log(this.props.context);
 		return (
-			<div align="center">
+			<div className="container" style={{width: "970px"}}>
 				<TestHeader />
-				<button onClick={this.edit}></button>
-				<hr />
+				<TestBody />
 			</div>
 		);
 	}
@@ -44,17 +49,26 @@ function mapStateToProps(state) {
         test: state.base.test,
         status: state.base.status,
         features: state.base.features,
-        locales: state.i18n.translations,
+        locales: state.i18n,
+        localesReducer: state.localesReducer,
         context: state.base.context,
         dafaultState: state.dafaultState
     }
 }
 
-const mapDispatchToProps = {
-    testAction,
-    getStatus,
-    getFeatures,
-    testInit
+const mapDispatchToProps = (dispatch) => {
+    const actions = {
+        testAction,
+	    getStatus,
+	    getFeatures,
+	    testInit,
+	    getLanguage,
+	    getLocaleResourcePath,
+	    languageSwitchItem
+    };
+    return {
+       actions: bindActionCreators(actions, dispatch)
+    }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
