@@ -50,7 +50,7 @@ function getLocaleResourcePath() {
     if (baseUrl.match(new RegExp("instances"))) {
         return "../locales/{{lng}}/{{ns}}.json";
     } else {
-        return "locales/{{lng}}/{{ns}}.json";
+        return "../locales/{{lng}}/{{ns}}.json";
     }
 }
 
