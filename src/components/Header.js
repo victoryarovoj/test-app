@@ -17,20 +17,20 @@ class TestHeader extends Component {
 	render() {
 		return (
 			<div>
-			<div className="row mtb-default">
-		        <div className="col-xs-1 text-left">
-		            <img src={logo} width="64" height="64" alt="Logo" />
-		        </div>
-		        <div className="col-xs-8 text-left text-muted">
-		            <h3 className="mtb-default" id="clientForService">{i18next.t("clientForService" : "clientForService")}</h3>
-		            <span id="titleCipherBis">{i18next.t("titleCipherBis" : "titleCipherBis")}</span>
-		        </div>
-		        <div className="col-xs-3 text-center text-muted">
-		            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{padding: "10px"}}>
-		            	{i18next.t("serviceNotConnected" : "serviceNotConnected")}
-		            </div>
-		        </div>
-		    </div>
+				<div className="row mtb-default">
+			        <div className="col-xs-1 text-left">
+			            <img src={logo} width="64" height="64" alt="Logo" />
+			        </div>
+			        <div className="col-xs-8 text-left text-muted">
+			            <h3 className="mtb-default" id="clientForService">{i18next.t("clientForService" : "clientForService")}</h3>
+			            <span id="titleCipherBis">{i18next.t("titleCipherBis" : "titleCipherBis")}</span>
+			        </div>
+			        <div className="col-xs-3 text-center text-muted">
+			            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{padding: "10px"}}>
+			            	{i18next.t("serviceNotConnected" : "serviceNotConnected")}
+			            </div>
+			        </div>
+			    </div>
 			    <div className="row">
 			        <div id="languageButtonLine" className="col-xs-12 text-right">
 			        	<button onClick={this.changeLang.bind(this, "uk")}>УКР</button>

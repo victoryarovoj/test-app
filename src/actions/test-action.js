@@ -67,6 +67,14 @@ export const getLocaleResourcePath = (lng) => (dispatch) => {
     })
 }
 
+export const getKeyProfilesFields = (profile) => (dispatch) => {
+
+    return dispatch({
+        type: 'GET_KEY_PROFILES_FIELDS',
+        payload: profile
+    })
+}
+
 export const languageSwitchItem = (aDisplayTitle, aLanguageCode, aItems) => (dispatch) => {
     this.items = aItems;
     this.displayTitle = aDisplayTitle;

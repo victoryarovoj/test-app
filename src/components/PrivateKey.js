@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import i18next from 'i18next';
-import { languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
+import { languageSwitchItem, getKeyProfilesFields } from '../actions/test-action';
+
+import Details from '../containers/Details'
 
 class PrivateKey extends Component {
+
+	constructor(props) {
+	    super(props);
+	    this.state = {
+	      listCSK: [],
+	      keysProfiles: []
+	    }
+	}
 
 
 getCA() {
@@ -14,7 +24,7 @@ getCA() {
       
       response.json().then((response) => {
       	var ca = response.ca;
-        console.log(ca);
+      	this.setState({listCSK:ca});
       });
     });
   }
@@ -26,7 +36,8 @@ getCA() {
       
       response.json().then((response) => {
       	var profiles = response;
-        console.log(profiles);
+      	this.setState({keysProfiles:profiles});
+      	console.log(profiles);
       });
     });
   }
@@ -79,12 +90,23 @@ getCA() {
 				      	<div className="card-body">
 				       		<div className="col-10">
 				            	<h5 className="card-title">key activation period</h5>
+				            	<ul>
+				            		{this.state.listCSK.map((item) => 
+				            			<li key={item.id}>{item.name}</li>
+				            		)}
+				            	</ul>
+				            	<ul>
+				            		{this.state.keysProfiles.map((item, index) => 
+				            			<li onClick={() => this.props.actions.getKeyProfilesFields(item)} key={item.id}>{item.caption}</li>
+				            		)}
+				            	</ul>
 				            	<button onClick={this.getCA.bind(this)}>getCA</button>
 				            	<button onClick={this.getKeysProfiles.bind(this)}>getKeysProfiles</button>
 				            	<button onClick={this.getData.bind(this)}>getData</button>
 				        	</div>
 				        </div>
 				    </div>
+				    <Details />
 			    </div>
 			</div>
 		);
@@ -98,7 +120,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => {
     const actions = {
-	    languageSwitchItem
+	    languageSwitchItem,
+	    getKeyProfilesFields
     };
     return {
        actions: bindActionCreators(actions, dispatch)

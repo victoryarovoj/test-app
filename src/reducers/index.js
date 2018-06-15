@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import localesReducer from './i18n'
 import dafaultState from './client';
+import activeProfile from './selectedProfile';
 
 const base = (state = {}, { type, payload }) => {
 
@@ -42,7 +43,8 @@ const base = (state = {}, { type, payload }) => {
 export default combineReducers({
     base: base,
     localesReducer: localesReducer,
-    dafaultState: dafaultState
+    dafaultState: dafaultState,
+    activeProfile: activeProfile
 });
 
 
