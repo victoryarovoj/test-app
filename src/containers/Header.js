@@ -29,7 +29,7 @@ class Header extends Component {
 		return (
 			<div className="container" style={{width: "970px"}}>
 				<TestHeader />
-				<TestBody />
+				
 			</div>
 		);
 	}

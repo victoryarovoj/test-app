@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import i18next from 'i18next'
 import { languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
+import TestBody from './TestBody'
+import Uploader from '../containers/Uploader'
 import logo from '../img/sjwsa-client-logo.png'
+import Tabs from './Tabs';
+import Pane from './Tab';
 
 
 class TestHeader extends Component {
@@ -17,6 +21,19 @@ class TestHeader extends Component {
 	render() {
 		return (
 			<div>
+			
+				<Tabs selected={0}>
+				  <Pane label="Tab 1" className="tab-content">
+				    <div>This is my tab 1 contents!</div>
+				  </Pane>
+				  <Pane label="Tab 2">
+				    <TestBody />
+				  </Pane>
+				  <Pane label="Tab 3">
+				    <Uploader />
+				  </Pane>
+				</Tabs>
+				
 				<div className="row mtb-default">
 			        <div className="col-xs-1 text-left">
 			            <img src={logo} width="64" height="64" alt="Logo" />
@@ -38,6 +55,7 @@ class TestHeader extends Component {
 						<button onClick={this.changeLang.bind(this, "en")}>ENG</button>
 			        </div>
 			    </div>
+
 			    <hr style={{marginTop: "7px", marginBottom: "7px"}} />
 			    <div id="topScreen">
 			        <div className="col-xs-10 col-xs-offset-1">
@@ -49,6 +67,7 @@ class TestHeader extends Component {
 			            </h3>
 			        </div>
 			    </div>
+			    
 			</div>
 		);
 	}
