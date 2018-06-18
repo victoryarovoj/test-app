@@ -280,7 +280,7 @@ getCA() {
 
 	render() {
 		return (
-			<div className="row">
+			<div className="row" style={{padding: "10px"}}>
 			  	<div className="col-4">
 			  		<div className="card">
 					    <div className="card-header">

@@ -4,10 +4,9 @@ import i18next from 'i18next'
 import { languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
 import TestBody from './TestBody'
-import Uploader from '../containers/Uploader'
+
 import logo from '../img/sjwsa-client-logo.png'
-import Tabs from './Tabs';
-import Pane from './Tab';
+
 
 
 class TestHeader extends Component {
@@ -20,20 +19,7 @@ class TestHeader extends Component {
 
 	render() {
 		return (
-			<div>
-			
-				<Tabs selected={0}>
-				  <Pane label="Tab 1" className="tab-content">
-				    <div>This is my tab 1 contents!</div>
-				  </Pane>
-				  <Pane label="Tab 2">
-				    <TestBody />
-				  </Pane>
-				  <Pane label="Tab 3">
-				    <Uploader />
-				  </Pane>
-				</Tabs>
-				
+			<div>			
 				<div className="row mtb-default">
 			        <div className="col-xs-1 text-left">
 			            <img src={logo} width="64" height="64" alt="Logo" />
@@ -43,16 +29,16 @@ class TestHeader extends Component {
 			            <span id="titleCipherBis">{i18next.t("titleCipherBis" : "titleCipherBis")}</span>
 			        </div>
 			        <div className="col-xs-3 text-center text-muted">
-			            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{padding: "10px"}}>
+			            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
 			            	{i18next.t("serviceNotConnected" : "serviceNotConnected")}
 			            </div>
 			        </div>
 			    </div>
 			    <div className="row">
 			        <div id="languageButtonLine" className="col-xs-12 text-right">
-			        	<button onClick={this.changeLang.bind(this, "uk")}>УКР</button>
-						<button onClick={this.changeLang.bind(this, "pl")}>PLN</button>
-						<button onClick={this.changeLang.bind(this, "en")}>ENG</button>
+			        	<button className="btn btn-default" style={{marginLeft: "7px"}} onClick={this.changeLang.bind(this, "uk")}>УКР</button>
+						<button className="btn btn-default" style={{marginLeft: "7px"}} onClick={this.changeLang.bind(this, "pl")}>PLN</button>
+						<button className="btn btn-default" style={{marginLeft: "7px"}} onClick={this.changeLang.bind(this, "en")}>ENG</button>
 			        </div>
 			    </div>
 

@@ -33,9 +33,9 @@ class Tabs extends Component {
     function labels(child, index) {
       let activeClass = (this.state.selected === index ? 'active' : '');
       return (
-        <li key={index} role="presentation">
-          <a href="#" data-toggle="tab" role="tab" 
-            className={activeClass}
+        <li key={index} style={{padding: "10px"}} role="presentation">
+          <a href="#" 
+            class={activeClass}
             onClick={this.handleClick.bind(this, index)}>
             {child.props.label}
           </a>
@@ -43,21 +43,21 @@ class Tabs extends Component {
       );
     }
     return (
-      <ul className="tabs__labels" className="nav nav-tabs" role="tablist">
+      <ul className="nav nav-tabs" role="tablist">
         {this.props.children.map(labels.bind(this))}
       </ul>
     );
   }
   _renderContent() {
     return (
-      <div className="tabs__content">
+      <div>
         {this.props.children[this.state.selected]}
       </div>
     );
   }
   render() {
     return (
-      <div className="tab-content">
+      <div>
         {this._renderTitles()}
         {this._renderContent()}
       </div>
