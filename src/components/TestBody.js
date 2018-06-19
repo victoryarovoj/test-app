@@ -17,7 +17,6 @@ class TestBody extends Component {
 		}
 		return (
 			<div>
-
 				<div id="allTabsContainer">
 				<Tabs selected={1}>
 				  <Pane label="PrivateKey" role="presentation">
@@ -29,6 +28,11 @@ class TestBody extends Component {
 				  <Pane label={i18next.t("createDs" : "createDs")} className="tab-content">
 				    <Uploader />
 				  </Pane>
+				  	<a className="dropdown-toggle" id="dropDownMenuItemsLabel" data-toggle="dropdown" aria-controls="dropDownMenuItemsContent" aria-expanded="false" role="button">
+	    				<span className="caret">
+							{i18next.t("anotherOperations" : "anotherOperations")}
+						</span>
+					</a>
 				</Tabs>
 				</div>
 			</div>

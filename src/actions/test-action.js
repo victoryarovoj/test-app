@@ -29,7 +29,7 @@ export const connectionStatus = () => (dispatch) => {
         xhr.open("GET", url);
         xhr.setRequestHeader("Content-type", "application/json");
         xhr.onload = function() {
-          console.log(xhr);
+        console.log(xhr);
             if (xhr.status === 200) {
                 return dispatch({
                     type: 'CONNECTION_STATUS',

@@ -15,6 +15,7 @@ class PrivateKey extends Component {
 			keysProfiles: [],
 			selectedKey: "",
 			selectedKeyValue: null,
+      selectedIndex: 0,
 			baseUrl: "https://local.cipher.kiev.ua:9090/api/v1/ticket/",
 			file: null,
       		uuid: null,
@@ -67,8 +68,10 @@ onFormSubmit(e) {
   }
 
   onDropdownSelected(e) {
-    
+    console.log("THE VAL", e.target.value);
+    console.log("THE VAL", e.target.selectedIndex);
     this.setState({selectedKey: e.target.value});
+    this.setState({selectedIndex: e.target.selectedIndex});
 
     //here you will see the current selected value of the select input
 }
@@ -192,7 +195,6 @@ createDS(){
     }
 
     setBlobData = function(data) {
-      // return this.setState({blobData:data});
       localThis.setState({blobData:data});
 
     }
@@ -234,6 +236,7 @@ getCA() {
       
       response.json().then((response) => {
       	var ca = response.ca;
+        console.log(ca);
       	this.setState({listCSK:ca});
 
       });
@@ -279,6 +282,7 @@ getCA() {
 	}
 
 	render() {
+    let _this = this
 		return (
 			<div className="row" style={{padding: "10px"}}>
 			  	<div className="col-4">
@@ -303,8 +307,8 @@ getCA() {
 				       		<div className="col-10">
 				            	<h5 className="card-title">key props</h5>
 				            	<select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
-      								  {this.state.listCSK.map(function(n) { 
-      								      return (<option value={n.id}>{n.name}</option>);
+      								  {this.state.listCSK.map(function(n, index) { 
+      								      return (<option selected={(index === _this.state.selectedIndex) ? 'selected' : ''} value={n.id}>{n.name}</option>);
       								})}
 								</select>
 								<p>

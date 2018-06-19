@@ -7,16 +7,16 @@ class Downloads extends Component {
 			return (<div></div>);
 		}
 		return (
-			<div>
-				<div className="col-xs-10 col-xs-offset-1">
-		            <h3 className="text-center">
+			<div id="topScreen">
+		        <div class="col-xs-10 col-xs-offset-1">
+		            <h3 class="text-center">
 		                <small>
-		                    <span id="downloadJwsaByRef"></span><br />
-		                    <p>downloadJwsaByRef</p>
+		                    <span id="downloadJwsaByRef"></span><br/>
+		                    <a href="jnlp/sjwsa-dev-preview.jnlp" id="personalDsService"></a>
 		                </small>
 		            </h3>
 		        </div>
-			</div>
+		    </div>
 		);
 	}
 }

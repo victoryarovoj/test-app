@@ -13,10 +13,15 @@ class TestHeader extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state={
+			connected: this.props.actions.connectionStatus()
+		}
 	}
 
 	componentDidMount() {
 		this.props.actions.connectionStatus()
+		console.log(this.state.connected);
 	}
 
     changeLang(lang){
@@ -24,6 +29,22 @@ class TestHeader extends Component {
         this.props.actions.languageSwitchItem('eng', lang, availableLanguege);
         
     }
+
+    _renderServiceConnectionStatus() {
+    	if (this.props.connectionStatus) {
+			return (
+				<div className="serviceConnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
+	            	{i18next.t("serviceConnected" : "serviceConnected")}
+	            </div>
+		    );
+		} else {
+			return (
+	            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
+			        {i18next.t("serviceNotConnected" : "serviceNotConnected")}
+	            </div>
+			);
+		}
+	}
 
 	render() {
 		return (
@@ -37,12 +58,10 @@ class TestHeader extends Component {
 			            <span id="titleCipherBis">{i18next.t("titleCipherBis" : "titleCipherBis")}</span>
 			        </div>
 			        <div className="col-md-3  text-center text-muted">
-			            <div className="serviceDisconnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
-			            	{i18next.t("serviceNotConnected" : "serviceNotConnected")}
-			            </div>
+			        	{this._renderServiceConnectionStatus()}
 			        </div>
 			    </div>
-			    <div className="row">
+			    <div className="row mtb-default">
 			        <div id="languageButtonLine" className="col-md-12 text-md-right">
 			        	<button className="btn btn-default" style={{marginLeft: "7px"}} onClick={this.changeLang.bind(this, "uk")}>УКР</button>
 						<button className="btn btn-default" style={{marginLeft: "7px"}} onClick={this.changeLang.bind(this, "pl")}>PLN</button>
