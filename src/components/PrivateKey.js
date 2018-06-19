@@ -303,9 +303,9 @@ getCA() {
 				       		<div className="col-10">
 				            	<h5 className="card-title">key props</h5>
 				            	<select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
-								  {this.state.listCSK.map(function(n) { 
-								      return (<option value={n.id}>{n.name}</option>);
-								  })}
+      								  {this.state.listCSK.map(function(n) { 
+      								      return (<option value={n.id}>{n.name}</option>);
+      								})}
 								</select>
 								<p>
 									<select className="select" onChange={this.state.defaultKeyValues}>

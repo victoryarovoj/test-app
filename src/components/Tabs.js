@@ -5,10 +5,9 @@ class Tabs extends Component {
     constructor(props) {
     super(props);
     this.state = {
-      selected: 0
+      selected: this.props.selected
     }
 }
-  displayName: 'Tabs'
   getDefaultProps() {
     return {
       selected: 0
@@ -27,7 +26,8 @@ class Tabs extends Component {
   }
   propTypes: {
     selected: PropTypes.number,
-    children: PropTypes.array
+    children: PropTypes.array,
+    children: PropTypes.element
   }
   _renderTitles() {
     function labels(child, index) {

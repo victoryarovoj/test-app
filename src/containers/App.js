@@ -7,7 +7,7 @@ class App extends Component {
 	 // <Uploader />
 	render() {
 		return (
-			<div  className="container" style={{width: "970px"}}>
+			<div className="container" style={{width: "970px"}}>
 				<Header />
 				<TestBody />
 			</div>

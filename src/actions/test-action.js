@@ -21,6 +21,41 @@ export const getStatus = () => (dispatch) => {
     });
 }
 
+export const connectionStatus = () => (dispatch) => {
+    var url;
+        url = "https://local.cipher.kiev.ua:9090/api/v1/status"
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.onload = function() {
+          console.log(xhr);
+            if (xhr.status === 200) {
+                return dispatch({
+                    type: 'CONNECTION_STATUS',
+                    payload: true
+                })
+            } else {
+                return dispatch({
+                    type: 'CONNECTION_STATUS',
+                    payload: false
+                })
+            }
+        };
+        xhr.send();
+    // fetch("https://local.cipher.kiev.ua:9091/api/v1/status", {
+    //         method: 'GET'
+    //     }).then((response) => {
+
+    //     response.json().then((response) => {
+    //             dispatch({
+    //             type: 'CONNECTION_STATUS',
+    //             payload: response
+    //         })
+    //     });
+    // });
+}
+
 export const getFeatures = () => (dispatch) => {
 	return fetch("https://local.cipher.kiev.ua:9091/api/v1/features", {
       method: 'GET'
