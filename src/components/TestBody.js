@@ -6,33 +6,52 @@ import { bindActionCreators } from 'redux';
 import Tabs from './Tabs';
 import Pane from './Tab';
 import Ts from './Ts';
+import Dropdown from './Dropdown';
 import Uploader from '../containers/Uploader'
 import PrivateKey from './PrivateKey'
 
 class TestBody extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state={
+			connected: this.props.connectionStatus
+		}
+	}
+
+	_dropDownrender () {
+		return (
+			<a className="dropdown-toggle" id="dropDownMenuItemsLabel" data-toggle="dropdown" aria-controls="dropDownMenuItemsContent" aria-expanded="false" role="button">
+				<span className="caret">
+					{i18next.t("anotherOperations" : "anotherOperations")}
+				</span>
+			</a>
+		);
+	}
 
 	render() {
-		if (this.props.connectionStatus) {
+		if (this.state.connected) {
 			return (<div></div>);
 		}
 		return (
 			<div>
 				<div id="allTabsContainer">
 				<Tabs selected={1}>
-				  <Pane label="PrivateKey" role="presentation">
+				  <Pane label="PrivateKey">
 				    <PrivateKey />
 				  </Pane>
-				  <Pane label={i18next.t("verifyDs" : "verifyDs")} className="tab-content">
+				  <Pane label={i18next.t("verifyDs" : "verifyDs")}>
 				    <Ts />
 				  </Pane>
-				  <Pane label={i18next.t("createDs" : "createDs")} className="tab-content">
+				  <Pane label={i18next.t("createDs" : "createDs")}>
 				    <Uploader />
 				  </Pane>
-				  	<a className="dropdown-toggle" id="dropDownMenuItemsLabel" data-toggle="dropdown" aria-controls="dropDownMenuItemsContent" aria-expanded="false" role="button">
-	    				<span className="caret">
-							{i18next.t("anotherOperations" : "anotherOperations")}
-						</span>
-					</a>
+				  <Pane label={<select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
+				            <option value="1">1</option>
+				            <option value="2">2</option>
+				            <option value="3">3</option>       
+				        </select>}>
+				  </Pane>
 				</Tabs>
 				</div>
 			</div>

@@ -236,7 +236,7 @@ class Uploader extends React.Component {
     return (
       <div>
           <div className="container">
-            <div className="row">
+            <div className="row" style={{padding: "10px"}}>
               <div className="col-4">
               <div className="card">
                 <div className="card-header">

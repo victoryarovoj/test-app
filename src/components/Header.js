@@ -15,13 +15,20 @@ class TestHeader extends Component {
 		super(props);
 
 		this.state={
-			connected: this.props.actions.connectionStatus()
+			connected: this.props.connectionStatus
 		}
 	}
 
 	componentDidMount() {
-		this.props.actions.connectionStatus()
-		console.log(this.state.connected);
+		let _this = this
+		this.checkConnection = () => {
+			_this.props.actions.connectionStatus()
+			_this.setState({connected: _this.props.connectionStatus});
+			setTimeout(this.checkConnection, 2500);
+		}
+
+		this.checkConnection();
+		
 	}
 
     changeLang(lang){
@@ -31,7 +38,7 @@ class TestHeader extends Component {
     }
 
     _renderServiceConnectionStatus() {
-    	if (this.props.connectionStatus) {
+    	if (this.state.connected) {
 			return (
 				<div className="serviceConnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
 	            	{i18next.t("serviceConnected" : "serviceConnected")}
@@ -70,7 +77,7 @@ class TestHeader extends Component {
 			    </div>
 			    <hr />
 			    <div id="topScreen">
-			        <Downloads open={this.props.connectionStatus} />
+			        <Downloads open={this.state.connected} />
 			    </div>			    
 			</div>
 		);
@@ -79,7 +86,8 @@ class TestHeader extends Component {
 
 function mapStateToProps(state) {
     return {
-        dafaultState: state.dafaultState
+        dafaultState: state.dafaultState,
+        connectionStatus: state.connectionStatus
     }
 }
 

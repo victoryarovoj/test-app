@@ -5,10 +5,11 @@ class Ts extends Component {
 
     render() {
         return (
-            
-            <div className="row">
-                <span>verifyDS</span>
-            </div>
+            <div className="container">
+	            <div className="row" style={{padding: "10px"}}>
+	                <span>verifyDS</span>
+	            </div>
+	        </div>
         );
     }
 }

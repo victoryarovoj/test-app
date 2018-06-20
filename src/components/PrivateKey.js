@@ -21,9 +21,9 @@ class PrivateKey extends Component {
       		uuid: null,
 			defaultKeyValues:[
 					"[файл на диску]",
-				"active",
+				  "active",
 			  	"pasive"
-			]
+			  ]
 	    }
 
 	    this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -51,9 +51,23 @@ componentDidMount() {
       	var ca = response.ca;
       	console.log(ca)
       	this.setState({listCSK:ca});
+        this.setState({selectedKey:ca[5].name});
       });
     });
 }
+
+_renderSelect(arr) {
+    let _this = this
+    const numbers = arr;
+    const listItems = arr.map((item, index) =>
+        <option selected={(index === _this.state.selectedIndex) ? 'selected' : ''} value={item.id}>{item.name}</option>
+    );
+    return (
+        <select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
+            {listItems}           
+        </select>
+    );
+  }
 
 onFormSubmit(e) {
     e.preventDefault();
@@ -306,11 +320,7 @@ getCA() {
 				      	<div className="card-body">
 				       		<div className="col-10">
 				            	<h5 className="card-title">key props</h5>
-				            	<select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
-      								  {this.state.listCSK.map(function(n, index) { 
-      								      return (<option selected={(index === _this.state.selectedIndex) ? 'selected' : ''} value={n.id}>{n.name}</option>);
-      								})}
-								</select>
+				            	{this._renderSelect (this.state.listCSK)}
 								<p>
 									<select className="select" onChange={this.state.defaultKeyValues}>
 									  {this.state.defaultKeyValues.map(function(n, index) { 

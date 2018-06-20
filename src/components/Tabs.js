@@ -31,11 +31,11 @@ class Tabs extends Component {
   }
   _renderTitles() {
     function labels(child, index) {
-      let activeClass = (this.state.selected === index ? 'active' : '');
+      let activeClass = (this.state.selected === index ? 'nav-link active' : 'nav-link');
       return (
-        <li key={index} style={{padding: "10px"}} className="nav-item">
-          <a href="#" className="nav-link"
-            class={activeClass}
+        <li key={index} className="nav-item">
+          <a href={null}
+            className={activeClass}
             onClick={this.handleClick.bind(this, index)}>
             {child.props.label}
           </a>

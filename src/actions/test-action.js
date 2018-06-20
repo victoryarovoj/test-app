@@ -22,38 +22,32 @@ export const getStatus = () => (dispatch) => {
 }
 
 export const connectionStatus = () => (dispatch) => {
-    var url;
+    var readyStateChanged, url, xhr, reponseStatus;
+        
         url = "https://local.cipher.kiev.ua:9090/api/v1/status"
-
-        var xhr = new XMLHttpRequest();
+        xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onload = function() {
-        console.log(xhr);
-            if (xhr.status === 200) {
-                return dispatch({
+
+        readyStateChanged = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    reponseStatus = true;
+                } else {
+                    reponseStatus = false;
+                }
+                dispatch({
                     type: 'CONNECTION_STATUS',
-                    payload: true
+                    payload: reponseStatus
                 })
-            } else {
-                return dispatch({
-                    type: 'CONNECTION_STATUS',
-                    payload: false
-                })
+
             }
         };
-        xhr.send();
-    // fetch("https://local.cipher.kiev.ua:9091/api/v1/status", {
-    //         method: 'GET'
-    //     }).then((response) => {
 
-    //     response.json().then((response) => {
-    //             dispatch({
-    //             type: 'CONNECTION_STATUS',
-    //             payload: response
-    //         })
-    //     });
-    // });
+        readyStateChanged = readyStateChanged.bind(this);
+
+        xhr.onreadystatechange = readyStateChanged;
+        xhr.send();
 }
 
 export const getFeatures = () => (dispatch) => {
