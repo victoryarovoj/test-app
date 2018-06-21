@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { testAction, getStatus, getFeatures, testInit, getLanguage, getLocaleResourcePath, languageSwitchItem } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
 import TestHeader from '../components/Header';
-import TestBody from '../components/TestBody';
+// import TestBody from '../components/TestBody';
 
 class Header extends Component {
 

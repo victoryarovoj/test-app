@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import i18next from 'i18next';
-import { bindActionCreators } from 'redux';
-import { languageSwitchItem, getKeyProfilesFields } from '../actions/test-action';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+// import i18next from 'i18next'
+import { bindActionCreators } from 'redux'
+import { languageSwitchItem, getKeyProfilesFields, setSelectedContainer, availabelesContainers } from '../actions/test-action'
 
 import Details from '../containers/Details'
 
@@ -11,11 +11,11 @@ class PrivateKey extends Component {
 	constructor(props) {
 	    super(props);
 	    this.state = {
-			listCSK: [],
+			listCSK: this.props.keyContainers,
 			keysProfiles: [],
-			selectedKey: "",
+			selectedKeyContainer: this.props.selectedKey || "tovUkraine",
 			selectedKeyValue: null,
-      selectedIndex: 0,
+      selectedIndex: 5,
 			baseUrl: "https://local.cipher.kiev.ua:9090/api/v1/ticket/",
 			file: null,
       		uuid: null,
@@ -39,32 +39,39 @@ class PrivateKey extends Component {
 	    this.getDSData = this.getDSData.bind(this);
 
 	    this.sendKeyData = this.sendKeyData.bind(this);
+      this.onDropdownSelected = this.onDropdownSelected.bind(this);
+      this.onSelect = this.onSelect.bind(this)
 	}
 
 
 componentDidMount() {
-    return fetch("https://local.cipher.kiev.ua:9090/api/v1/certificateAuthority/supported", {
-      method: 'GET'
-      }).then((response) => {
+    // return fetch("https://local.cipher.kiev.ua:9090/api/v1/certificateAuthority/supported", {
+    //   method: 'GET'
+    //   }).then((response) => {
       
-      response.json().then((response) => {
-      	var ca = response.ca;
-      	console.log(ca)
-      	this.setState({listCSK:ca});
-        this.setState({selectedKey:ca[5].name});
-      });
-    });
+    //   response.json().then((response) => {
+    //   	var ca = response.ca;
+    //   	console.log(ca)
+    //   	this.setState({listCSK:ca});
+    //     this.setState({selectedKey:ca[5].name});
+    //   });
+    // });
 }
 
-_renderSelect(arr) {
-    let _this = this
-    const numbers = arr;
-    const listItems = arr.map((item, index) =>
-        <option selected={(index === _this.state.selectedIndex) ? 'selected' : ''} value={item.id}>{item.name}</option>
-    );
+_renderSelect() {
+
+    var optionsState = this.state.selectedKeyContainer
+    const arr = this.state.listCSK.ca || [];
+
+    function options(child, index) {
+      
+      return (
+        <option value={child.id} selected={optionsState === child.id}>{child.name}</option>
+      );
+    }
     return (
-        <select className="select" style={{textAlign: "center", textAlignLast: "center"}} onChange={this.onDropdownSelected}>
-            {listItems}           
+        <select className="select" defaultValue={this.state.selectedKeyContainer} style={{textAlign: "center", textAlignLast: "center"}} onClick={this.onDropdownSelected}>
+            {arr.map(options.bind(this))}          
         </select>
     );
   }
@@ -77,17 +84,16 @@ onFormSubmit(e) {
 
   onChange(e) {
     this.setState({file:e.target.files[0]});
-    
-    
+  }
+
+  onSelect() {
+
   }
 
   onDropdownSelected(e) {
     console.log("THE VAL", e.target.value);
     console.log("THE VAL", e.target.selectedIndex);
-    this.setState({selectedKey: e.target.value});
-    this.setState({selectedIndex: e.target.selectedIndex});
-
-    //here you will see the current selected value of the select input
+    this.props.actions.setSelectedContainer(e.target.value)
 }
 
 createSession(){
@@ -287,8 +293,9 @@ getCA() {
 	          try {
 			        var jsonResponse = JSON.parse(xhr.responseText);
 			        message = jsonResponse.message;
+              console.log(message);
 			    } catch (e) {
-			        message = (xhr.responseText == undefined) ? "Ошибка при получении списка подключенных защищенных носителей." : xhr.responseText;
+			        // message = (xhr.responseText == undefined) ? "Ошибка при получении списка подключенных защищенных носителей." : xhr.responseText;
 			    }
 	      }
 	    };
@@ -296,7 +303,6 @@ getCA() {
 	}
 
 	render() {
-    let _this = this
 		return (
 			<div className="row" style={{padding: "10px"}}>
 			  	<div className="col-4">
@@ -320,11 +326,11 @@ getCA() {
 				      	<div className="card-body">
 				       		<div className="col-10">
 				            	<h5 className="card-title">key props</h5>
-				            	{this._renderSelect (this.state.listCSK)}
+				            	{this._renderSelect()}
 								<p>
-									<select className="select" onChange={this.state.defaultKeyValues}>
+									<select className="select" onSelect={this.state.defaultKeyValues}>
 									  {this.state.defaultKeyValues.map(function(n, index) { 
-									      return (<option value={index}>{n}</option>);
+									      return (<option key={index} value={index}>{n}</option>);
 									  })}
 									</select>
 								</p>
@@ -355,14 +361,18 @@ getCA() {
 }
 function mapStateToProps(state) {
     return {
-        dafaultState: state.dafaultState
+        dafaultState: state.dafaultState,
+        keyContainers: state.keyContainers,
+        selectedKey: state.selectedContainer
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     const actions = {
 	    languageSwitchItem,
-	    getKeyProfilesFields
+	    getKeyProfilesFields,
+      availabelesContainers,
+      setSelectedContainer
     };
     return {
        actions: bindActionCreators(actions, dispatch)

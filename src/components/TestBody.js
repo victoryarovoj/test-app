@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import Tabs from './Tabs';
 import Pane from './Tab';
 import Ts from './Ts';
-import Dropdown from './Dropdown';
+// import Dropdown from './Dropdown';
 import Uploader from '../containers/Uploader'
 import PrivateKey from './PrivateKey'
 

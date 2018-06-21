@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import i18next from 'i18next'
-import { languageSwitchItem, connectionStatus } from '../actions/test-action';
+import { languageSwitchItem, connectionStatus, availabelesContainers } from '../actions/test-action';
 import { bindActionCreators } from 'redux';
-import TestBody from './TestBody'
+// import TestBody from './TestBody'
 import Downloads from './Download'
 
 import logo from '../img/sjwsa-client-logo.png'
@@ -28,12 +28,19 @@ class TestHeader extends Component {
 		}
 
 		this.checkConnection();
+		this.props.actions.availabelesContainers()
+
 		
 	}
 
+	// onChange() {
+	// 	this.props.actions.availabelesContainers();
+	// }
+
     changeLang(lang){
 		var availableLanguege = ["en", "uk", "pl"];
-        this.props.actions.languageSwitchItem('eng', lang, availableLanguege);
+        this.props.actions.languageSwitchItem('en', lang, availableLanguege);
+        console.log(i18next.language);
         
     }
 
@@ -87,14 +94,16 @@ class TestHeader extends Component {
 function mapStateToProps(state) {
     return {
         dafaultState: state.dafaultState,
-        connectionStatus: state.connectionStatus
+        connectionStatus: state.connectionStatus,
+        availabelesContainers: availabelesContainers
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     const actions = {
 	    languageSwitchItem,
-	    connectionStatus
+	    connectionStatus,
+	    availabelesContainers
     };
     return {
        actions: bindActionCreators(actions, dispatch)

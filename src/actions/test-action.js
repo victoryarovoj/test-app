@@ -50,6 +50,27 @@ export const connectionStatus = () => (dispatch) => {
         xhr.send();
 }
 
+export const availabelesContainers = () => (dispatch) => {
+    return fetch("https://local.cipher.kiev.ua:9090/api/v1/certificateAuthority/supported", {
+      method: 'GET'
+      }).then((response) => {
+      
+      response.json().then((response) => {
+            dispatch({
+                type: 'AVAILABELES_CONTAINERS',
+                payload: response
+            })
+      });
+    });
+}
+
+export const setSelectedContainer = (container) => (dispatch) => {
+    dispatch({
+        type: 'SELECTED_CONTAINER',
+        payload: container
+    })
+}
+
 export const getFeatures = () => (dispatch) => {
 	return fetch("https://local.cipher.kiev.ua:9091/api/v1/features", {
       method: 'GET'

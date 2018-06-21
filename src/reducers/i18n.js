@@ -35,7 +35,7 @@ function getLanguage() {
     var url = window.location.search;
     var re = /\?.*language=([\w]{2})/;
     var res = url.match(re);
-    var lang = "en";
+    var lang = "";
     if (res) {
         lang =res[1];
     }
@@ -58,7 +58,7 @@ i18next
 .use(i18nextXHRBackend)
 .init({
     lng: getLanguage(),
-    fallbackLng: 'uk',
+    fallbackLng: 'en',
     debug: true,
     ns: ['common', 'ds', 'cert', 'ts', 'dec', 'enc', 'keygen', 'ub'],
     defaultNS: 'common',

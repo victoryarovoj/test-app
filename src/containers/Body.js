@@ -28,7 +28,7 @@ function mapStateToProps(state) {
         test: state.base.test,
         status: state.base.status,
         features: state.base.features,
-        // locales: state.i18n.translations,
+        locales: state.i18n.translations,
         context: state.base.context,
         dafaultState: state.dafaultState
     }
