@@ -64,6 +64,13 @@ export const availabelesContainers = () => (dispatch) => {
     });
 }
 
+export const setKCValue = (caId, privateKeyContainerPass, privateKeyFileContainer) => (dispatch) => {
+    dispatch({
+        type: 'SET_PK_VALUE',
+        payload: {caId, privateKeyContainerPass, privateKeyFileContainer}
+    })
+}
+
 export const setSelectedContainer = (container) => (dispatch) => {
     dispatch({
         type: 'SELECTED_CONTAINER',

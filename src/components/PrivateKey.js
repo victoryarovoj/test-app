@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 // import i18next from 'i18next'
 import { bindActionCreators } from 'redux'
-import { languageSwitchItem, getKeyProfilesFields, setSelectedContainer, availabelesContainers } from '../actions/test-action'
+import { languageSwitchItem, getKeyProfilesFields, setSelectedContainer, setKCValue, availabelesContainers } from '../actions/test-action'
 
 import Details from '../containers/Details'
 
@@ -11,19 +11,20 @@ class PrivateKey extends Component {
 	constructor(props) {
 	    super(props);
 	    this.state = {
-			listCSK: this.props.keyContainers,
-			keysProfiles: [],
-			selectedKeyContainer: this.props.selectedKey || "tovUkraine",
-			selectedKeyValue: null,
-      selectedIndex: 5,
-			baseUrl: "https://local.cipher.kiev.ua:9090/api/v1/ticket/",
-			file: null,
-      		uuid: null,
-			defaultKeyValues:[
-					"[файл на диску]",
-				  "active",
-			  	"pasive"
-			  ]
+    			listCSK: this.props.keyContainers || [],
+    			keysProfiles: [],
+    			selectedKeyContainer: this.props.selectedKey || "testIitCa",
+    			selectedKeyValue: "testIitCa",
+          selectedIndex: 5,
+    			baseUrl: "https://local.cipher.kiev.ua:9090/api/v1/ticket/",
+    			file: null,
+          uuid: null,
+          keyStorePassword: "",
+    			defaultKeyValues:[
+    					"[файл на диску]",
+    				  "active",
+    			  	"pasive"
+    			]
 	    }
 
 	    this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -61,7 +62,7 @@ componentDidMount() {
 _renderSelect() {
 
     var optionsState = this.state.selectedKeyContainer
-    const arr = this.state.listCSK.ca || [];
+    const arr = this.state.listCSK.ca;
 
     function options(child, index) {
       
@@ -76,14 +77,24 @@ _renderSelect() {
     );
   }
 
-onFormSubmit(e) {
-    e.preventDefault();
-
-    this.createSession();
+onFormSubmit() {
+    this.setState({keyStorePassword:this.password.value});
+    // this.createSession();
   }
 
   onChange(e) {
     this.setState({file:e.target.files[0]});
+  }
+
+  confirm() {
+      // this.setState({caId:this.state.selectedKeyContainer})
+      // this.setState({privateKeyContainerPass:this.password.value})
+      // this.setState({privateKeyFileContainer:this.state.file})
+      this.props.actions.setKCValue(this.state.selectedKeyContainer, this.password.value, this.state.file)
+  }
+
+  onPassChange(e) {
+    // this.setState({keyStorePassword:e.target.value})
   }
 
   onSelect() {
@@ -187,7 +198,7 @@ createDS(){
       headers: {
             'Content-Type': 'application/json'
 	    },
-	    body: JSON.stringify({keyStorePassword : "12345677"})
+	    body: JSON.stringify({keyStorePassword : this.state.keyStorePassword})
     }).then((response) => {
       response.json().then((response) => {
         console.log(response);
@@ -338,7 +349,7 @@ getCA() {
 									<input type="file" onChange={this.onChange} />
 								</p>
 								<p>
-									<input type="password" />
+									<input ref={x => this.password = x} type="password" onChange={this.onPassChange} />
 								</p>
 				            	
 				            	<ul>
@@ -348,8 +359,7 @@ getCA() {
 				            	</ul>
 				            	<button onClick={this.getCA.bind(this)}>getCA</button>
 				            	<button onClick={this.getKeysProfiles.bind(this)}>getKeysProfiles</button>
-				            	<button onClick={this.getData.bind(this)}>getData</button>
-				            	<button onClick={this.createSession.bind(this)}>Upload</button>
+				            	<button onClick={this.confirm.bind(this)}>Confirm</button>
 				        	</div>
 				        </div>
 				    </div>
@@ -363,7 +373,8 @@ function mapStateToProps(state) {
     return {
         dafaultState: state.dafaultState,
         keyContainers: state.keyContainers,
-        selectedKey: state.selectedContainer
+        selectedKey: state.selectedContainer,
+        clientKCState: state.clientKCState
     }
 }
 
@@ -372,7 +383,8 @@ const mapDispatchToProps = (dispatch) => {
 	    languageSwitchItem,
 	    getKeyProfilesFields,
       availabelesContainers,
-      setSelectedContainer
+      setSelectedContainer,
+      setKCValue
     };
     return {
        actions: bindActionCreators(actions, dispatch)

@@ -5,6 +5,7 @@ import activeProfile from './selectedProfile';
 import connectionStatus from './connectionStatus';
 import keyContainers from './keyContainers';
 import selectedContainer from './selectedContainer';
+import clientKCState from './clientKCState';
 
 const base = (state = {}, { type, payload }) => {
 
@@ -50,7 +51,8 @@ export default combineReducers({
     activeProfile: activeProfile,
     connectionStatus: connectionStatus,
     keyContainers: keyContainers,
-    selectedContainer: selectedContainer
+    selectedContainer: selectedContainer,
+    clientKCState: clientKCState
 });
 
 

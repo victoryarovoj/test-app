@@ -13,7 +13,7 @@ class Downloads extends Component {
 			            <h3 className="text-center">
 			                <small>
 			                    <span id="downloadJwsaByRef"></span><br/>
-			                    <a href="jnlp/sjwsa-dev-preview.jnlp" id="personalDsService">{i18next.t("downloadJwsaByRef" : "downloadJwsaByRef")}</a>
+			                    <a href="../jnlp/pcs-dev-preview.jnlp" id="personalDsService">{i18next.t("downloadJwsaByRef" : "downloadJwsaByRef")}</a>
 			                </small>
 			            </h3>
 			        </div>

@@ -24,7 +24,7 @@ class TestHeader extends Component {
 		this.checkConnection = () => {
 			_this.props.actions.connectionStatus()
 			_this.setState({connected: _this.props.connectionStatus});
-			setTimeout(this.checkConnection, 2500);
+			setTimeout(this.checkConnection, 10000);
 		}
 
 		this.checkConnection();

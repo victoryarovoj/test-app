@@ -94,13 +94,13 @@ class Uploader extends React.Component {
     var selectedOptions, url;
       selectedOptions = {
         "signatureTsVerifyOption": "IGNORE",
-         "embedSignatureTs": "true",
-         "embedCertificateType": "signerAndCaCert",
-         "signatureType": "DETACHED",
-         "dataTsVerifyOption": "IGNORE",
-         "embedDataTs": "true",
-         "dataToSignQualifier": "ALREADY_SIGNED",
-         "duplicateSign": "false"
+        "embedSignatureTs": "true",
+        "embedCertificateType": "signerAndCaCert",
+        "signatureType": "DETACHED",
+        "dataTsVerifyOption": "IGNORE",
+        "embedDataTs": "true",
+        "dataToSignQualifier": "ALREADY_SIGNED",
+        "duplicateSign": "false"
     }
 
     url = this.state.baseUrl + this.state.uuid + "/option";

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+        spec="1.0+"
+        codebase="https://cipher.kiev.ua/files/pcs/jnlp"
+        href="pcs-dev-preview.jnlp">
+    <information>
+        <vendor>Cipher</vendor>
+        <title>Персональний сервіс криптографічних операцій</title>
+        <homepage href="https://cipher.kiev.ua/"/>
+        <icon href="splash.png" kind="splash"/>
+        <offline-allowed/>
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.8" file-encoding="UTF8" java-vm-args="-Xms64m -Xmx768m -XX:+UseConcMarkSweepGC"/>
+            
+    <jar href="lib/pcs-dev-preview-fj-0.9.1-b8.jar" main="true"/>
+
+        
+    </resources>
+    <application-desc main-class="com.cipher.pcs.ui.App"/>
+    <update check="always" policy="always"/>
+</jnlp>
