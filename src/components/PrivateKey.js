@@ -67,7 +67,7 @@ _renderSelect() {
     function options(child, index) {
       
       return (
-        <option value={child.id} selected={optionsState === child.id}>{child.name}</option>
+        <option key={index} value={child.id} selected={optionsState === child.id}>{child.name}</option>
       );
     }
     return (
@@ -324,7 +324,9 @@ getCA() {
 			    		<div className="card-body">
 			      			<div className="col-10">
 			      				<h6 className="card-title">key activation period</h6>
-					          	<input type="text" />
+                      <div className="col-6">
+					          	  <input type="text" />.
+                      </div>
 					      	</div>
 					    </div>
 					</div>
@@ -339,7 +341,7 @@ getCA() {
 				            	<h5 className="card-title">key props</h5>
 				            	{this._renderSelect()}
 								<p>
-									<select className="select" onSelect={this.state.defaultKeyValues}>
+									<select className="select" defaultValue={this.state.defaultKeyValues[0]}>
 									  {this.state.defaultKeyValues.map(function(n, index) { 
 									      return (<option key={index} value={index}>{n}</option>);
 									  })}

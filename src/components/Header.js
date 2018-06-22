@@ -45,7 +45,7 @@ class TestHeader extends Component {
     }
 
     _renderServiceConnectionStatus() {
-    	if (this.state.connected) {
+    	if (this.props.connectionStatus) {
 			return (
 				<div className="serviceConnected" id="serviceConnectionStatus" style={{textAlign:"center"}}>
 	            	{i18next.t("serviceConnected" : "serviceConnected")}
@@ -84,7 +84,7 @@ class TestHeader extends Component {
 			    </div>
 			    <hr />
 			    <div id="topScreen">
-			        <Downloads open={this.state.connected} />
+			        <Downloads open={this.props.connectionStatus} />
 			    </div>			    
 			</div>
 		);

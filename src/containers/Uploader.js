@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 
 class Uploader extends React.Component {
@@ -8,7 +9,7 @@ class Uploader extends React.Component {
     this.state = {
       file: null,
       uuid: null,
-      baseUrl: "https://local.cipher.kiev.ua:9091/api/v1/ticket/",
+      baseUrl: "https://local.cipher.kiev.ua:9090/api/v1/ticket/",
       fileName: null,
       blobData: null
     }
@@ -37,26 +38,25 @@ class Uploader extends React.Component {
     this.setState({fileName: e.target.files[0].name});
   }
 
-
   createSession(){
-      return fetch(this.state.baseUrl, {
-        method: 'POST',
-        dataType: "json"
-      },).then(response => {
-      if (response.ok) {
-        response.json().then(json => {
-          this.setState({uuid:json.ticketUuid});
-          console.log(json.message);
-          this.sendData();
-        });
-      }
-    });
-  }
+  return fetch(this.state.baseUrl, {
+      method: 'POST',
+      dataType: "json"
+    },).then(response => {
+  if (response.ok) {
+      response.json().then(json => {
+        this.setState({uuid:json.ticketUuid});
+        console.log(json.message);
+        this.sendData();
+      });
+    }
+  });
+}
 
-  sendData(){
-    var url, dsData;
+sendData(){
+    var url, dsData, _this;
     url = this.state.baseUrl + this.state.uuid + "/data"
-
+    _this = this
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-type", "application/octet-stream");
@@ -64,11 +64,12 @@ class Uploader extends React.Component {
       console.log(xhr);
         if (xhr.status === 200) {
           dsData = xhr.response;
+          _this.sendSessionData();
           console.log(dsData);
         }
     };
     xhr.send(this.state.file);
-    this.setMetaData();
+    
   }
 
   setMetaData(){
@@ -90,17 +91,19 @@ class Uploader extends React.Component {
     });
   }
 
-  sendSessionData(){
+sendSessionData(){
     var selectedOptions, url;
       selectedOptions = {
         "signatureTsVerifyOption": "IGNORE",
-        "embedSignatureTs": "true",
-        "embedCertificateType": "signerAndCaCert",
+        "embedSignatureTs": "false",
+        "embedCertificateType": "NOTHING",
         "signatureType": "DETACHED",
         "dataTsVerifyOption": "IGNORE",
-        "embedDataTs": "true",
-        "dataToSignQualifier": "ALREADY_SIGNED",
-        "duplicateSign": "false"
+        "embedDataTs": "false",
+        "dataToSignQualifier": "NOT_SIGNED_BEFORE",
+        "duplicateSign": "true",
+        "caId": this.props.clientKCState.caId
+        
     }
 
     url = this.state.baseUrl + this.state.uuid + "/option";
@@ -114,12 +117,51 @@ class Uploader extends React.Component {
       }).then((response) => {
         response.json().then((response) => {
           console.log(response);
-          this.createDS();
+          this.sendKeyData();
         });
     });
   }
 
-  createDS(){
+sendKeyData(){
+    var url, dsData, _this, checkInfo;
+
+    checkInfo = function (){
+      var url = _this.state.baseUrl + _this.state.uuid + "/keyStore/certificate/info/keyAgreement"
+
+      return fetch(url, {
+        method: 'PUT',
+        dataType: "json",
+        headers: {
+              'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({keyStorePassword: _this.props.clientKCState.privateKeyContainerPass})
+      }).then((response) => {
+        console.log(response);
+        response.json().then((response) => {
+          console.log(response);
+        });
+      });
+    }
+
+    url = this.state.baseUrl + this.state.uuid + "/keyStore"
+    _this = this
+    var xhr = new XMLHttpRequest();
+    xhr.open("PUT", url);
+    xhr.setRequestHeader("Content-type", "application/octet-stream");
+    xhr.onload = function() {
+      console.log(xhr);
+        if (xhr.status === 200) {
+          dsData = xhr.response;
+          checkInfo()
+          _this.createDS();
+          console.log(dsData);
+        }
+    };
+    xhr.send(this.props.clientKCState.privateKeyFileContainer);
+
+  }
+
+createDS(){
     var url;
     url = this.state.baseUrl + this.state.uuid + "/ds/creator"
 
@@ -127,8 +169,9 @@ class Uploader extends React.Component {
       method: 'POST',
       dataType: "json",
       headers: {
-          'Content-Type': "text/plain"
-      }
+            'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({keyStorePassword: this.props.clientKCState.privateKeyContainerPass})
     }).then((response) => {
       response.json().then((response) => {
         console.log(response);
@@ -156,7 +199,6 @@ class Uploader extends React.Component {
     }
 
     setBlobData = function(data) {
-      // return this.setState({blobData:data});
       localThis.setState({blobData:data});
 
     }
@@ -191,6 +233,107 @@ class Uploader extends React.Component {
     xhr.send();
   }
 
+
+  
+
+  
+  // sendSessionData(){
+  //   var selectedOptions, url;
+  //     selectedOptions = {
+  //       "signatureTsVerifyOption": "IGNORE",
+  //       "embedSignatureTs": "true",
+  //       "embedCertificateType": "signerAndCaCert",
+  //       "signatureType": "DETACHED",
+  //       "dataTsVerifyOption": "IGNORE",
+  //       "embedDataTs": "true",
+  //       "dataToSignQualifier": "ALREADY_SIGNED",
+  //       "duplicateSign": "false"
+  //   }
+
+  //   url = this.state.baseUrl + this.state.uuid + "/option";
+  //     return fetch(url, {
+  //       method: 'PUT',
+  //       dataType: "json",
+  //       headers: {
+  //           'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(selectedOptions)
+  //     }).then((response) => {
+  //       response.json().then((response) => {
+  //         console.log(response);
+  //         this.createDS();
+  //       });
+  //   });
+  // }
+
+  // createDS(){
+  //   var url;
+  //   url = this.state.baseUrl + this.state.uuid + "/ds/creator"
+
+  //   return fetch(url, {
+  //     method: 'POST',
+  //     dataType: "json",
+  //     headers: {
+  //         'Content-Type': "text/plain"
+  //     }
+  //   }).then((response) => {
+  //     response.json().then((response) => {
+  //       console.log(response);
+  //       this.getDSData();
+  //     });
+  //   });
+  // }
+
+  // getDSData(){
+  //   var url, message, deleteSession, setBlobData, localThis;
+
+  //   url = this.state.baseUrl + this.state.uuid;
+  //   localThis = this;
+
+  //   deleteSession = function() {
+  //       return fetch(url, {
+  //         method: "DELETE",
+  //         dataType: "json",
+  //         cache: "no-cache",
+  //       }).then((response) => {
+  //         response.json().then((response) => {
+  //           console.log(response);
+  //         });
+  //     });
+  //   }
+
+    
+
+  //   var xhr = new XMLHttpRequest();
+  //   var requestUrl = url  + "/ds/data";
+  //   xhr.open("GET", requestUrl);
+  //   xhr.responseType = "blob";
+  //   xhr.onload = function() {
+  //     if (xhr.status === 200) {
+  //         var dsData = xhr.response;
+  //         message = "Данные ЭЦП успешно получены.";
+  //         console.log(message);
+  //         console.log(dsData);
+  //         deleteSession();
+  //         setBlobData(dsData);
+  //     } else {
+  //         var reader = new FileReader();
+  //         reader.onload = function() {
+  //             var response = reader.result;
+  //             console.log(response);
+  //             try {
+  //                 var jsonResponse = JSON.parse(xhr.responseText);
+  //                 message = jsonResponse.message;
+  //             } catch (e) {
+  //                 message = (xhr.responseText === undefined) ? "Ошибка при получении данных ЭЦП." : xhr.responseText;
+  //             }
+  //         }
+  //         reader.readAsText(xhr.response);
+  //     }
+  //   };
+  //   xhr.send();
+  // }
+
   getStatus() {
     fetch("https://local.cipher.kiev.ua:9091/api/v1/status", {
         method: 'GET'
@@ -203,15 +346,59 @@ class Uploader extends React.Component {
     });
   }
 
+  
+
   getFeatures() {
-    return fetch("https://local.cipher.kiev.ua:9091/api/v1/features", {
-      method: 'GET'
-      }).then((response) => {
-      
-      response.json().then((response) => {
-        console.log(response);
+    var uid, deleteSession, checkInfo, createSession,
+        url = this.state.baseUrl,
+        pass = this.props.clientKCState.privateKeyContainerPass,
+        signature = this.props.clientKCState.caId;
+
+    deleteSession = function () {
+        return fetch(url + uid, {
+          method: "DELETE",
+          dataType: "json",
+          cache: "no-cache",
+        }).then((response) => {
+          response.json().then((response) => {
+            console.log(response);
+          });
       });
-    });
+    }
+
+    checkInfo = function (){
+      var checkUrl = url + uid + "/keyStore/certificateInfo/detached"
+
+      return fetch(checkUrl, {
+        method: 'PUT',
+        dataType: "json",
+        headers: {
+              'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({keyStorePassword: pass})
+      }).then((response) => {
+        response.json().then((response) => {
+          console.log(response);
+          deleteSession();
+        });
+      });
+    }
+
+    createSession = function (){
+      return fetch(url, {
+          method: 'POST',
+          dataType: "json"
+        },).then(response => {
+      if (response.ok) {
+          response.json().then(json => {
+            uid = json.ticketUuid;
+            console.log(json.message);
+            checkInfo();
+          });
+        }
+      });
+    }
+    createSession();
   }
 
   getBlobData() {
@@ -243,7 +430,7 @@ class Uploader extends React.Component {
                   Options
                 </div>
                 <div className="card-body">
-                  <div className="col-6">
+                  <div className="col-md-6">
                       <label><input type="checkbox" /> Option 1</label>
                       <label><input type="checkbox" /> Option 2</label>
                       <label><input type="checkbox" /> Option 3</label>
@@ -265,7 +452,7 @@ class Uploader extends React.Component {
                     </div>
                    </div>
                   <button type="button" onClick={this.getStatus.bind(this)}>getStatus</button>
-                  <button onClick={this.getFeatures.bind(this)}>getFeatures</button>
+
                   <button onClick={this.getBlobData.bind(this)}>getBlobData</button>
                   
                 </div>
@@ -276,4 +463,11 @@ class Uploader extends React.Component {
     }
 }
 
-export default Uploader;
+function mapStateToProps(state) {
+    return {
+        clientKCState: state.clientKCState
+    }
+}
+                  // <button onClick={this.getFeatures.bind(this)}>certInfo</button>
+
+export default connect(mapStateToProps)(Uploader);

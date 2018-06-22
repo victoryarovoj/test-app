@@ -21,9 +21,9 @@ class TestBody extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state={
-			connected: this.props.connectionStatus
-		}
+		// this.state={
+		// 	connected: this.props.connectionStatus
+		// }
 	}
 
 	_dropDownrender () {
@@ -37,7 +37,7 @@ class TestBody extends Component {
 	}
 
 	render() {
-		if (this.state.connected) {
+		if (!this.props.connectionStatus) {
 			return (<div></div>);
 		}
 		return (
@@ -63,7 +63,7 @@ class TestBody extends Component {
 function mapStateToProps(state) {
     return {
         dafaultState: state.dafaultState,
-        connection: state.connectionStatus
+        connectionStatus: state.connectionStatus,
     }
 }
 
