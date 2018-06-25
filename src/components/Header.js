@@ -29,13 +29,10 @@ class TestHeader extends Component {
 
 		this.checkConnection();
 		this.props.actions.availabelesContainers()
+		
 
 		
 	}
-
-	// onChange() {
-	// 	this.props.actions.availabelesContainers();
-	// }
 
     changeLang(lang){
 		var availableLanguege = ["en", "uk", "pl"];

@@ -25,7 +25,7 @@ class CardBody extends Component {
 	    this.getVerifiedData = this.getVerifiedData.bind(this);
 
 
-    	this.sendKeyData = this.sendKeyData.bind(this);
+    	// this.sendKeyData = this.sendKeyData.bind(this);
 
 	    this.deleteSession = this.deleteSession.bind(this);
 	}
@@ -57,45 +57,45 @@ class CardBody extends Component {
 	  });
 	}
 
-sendKeyData(){
-    var url, dsData, _this, checkInfo;
+// sendKeyData(){
+//     var url, dsData, _this, checkInfo;
 
-    checkInfo = function (){
-      var url = _this.state.baseUrl + _this.state.uuid + "/keyStore/certificate/info/keyAgreement"
+//     checkInfo = function (){
+//       var url = _this.state.baseUrl + _this.state.uuid + "/keyStore/certificate/info/signature"
 
-      return fetch(url, {
-        method: 'PUT',
-        dataType: "json",
-        headers: {
-              'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({keyStorePassword: _this.props.clientKCState.privateKeyContainerPass})
-      }).then((response) => {
-        console.log(response);
-        response.json().then((response) => {
-        	_this.verifyData();
-          console.log(response);
-        });
-      });
-    }
+//       return fetch(url, {
+//         method: 'PUT',
+//         dataType: "json",
+//         headers: {
+//               'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({keyStorePassword: _this.props.clientKCState.privateKeyContainerPass})
+//       }).then((response) => {
+//         console.log(response);
+//         response.json().then((response) => {
+//         	_this.verifyData();
+//           console.log(response);
+//         });
+//       });
+//     }
 
-    url = this.state.baseUrl + this.state.uuid + "/keyStore"
-    _this = this
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", url);
-    xhr.setRequestHeader("Content-type", "application/octet-stream");
-    xhr.onload = function() {
-      console.log(xhr);
-        if (xhr.status === 200) {
-          dsData = xhr.response;
-          checkInfo()
+//     url = this.state.baseUrl + this.state.uuid + "/keyStore"
+//     _this = this
+//     var xhr = new XMLHttpRequest();
+//     xhr.open("PUT", url);
+//     xhr.setRequestHeader("Content-type", "application/octet-stream");
+//     xhr.onload = function() {
+//       console.log(xhr);
+//         if (xhr.status === 200) {
+//           dsData = xhr.response;
+//           checkInfo()
           
-          console.log(dsData);
-        }
-    };
-    xhr.send(this.props.clientKCState.privateKeyFileContainer);
+//           console.log(dsData);
+//         }
+//     };
+//     xhr.send(this.props.clientKCState.privateKeyFileContainer);
 
-  }
+//   }
 
 	sendData(){
 		var url, dsData, _this;
@@ -121,7 +121,6 @@ sendKeyData(){
 		var xhr = new XMLHttpRequest();
 	    url = this.state.baseUrl + this.state.uuid + "/ds/data";
 	    _this = this
-		var xhr = new XMLHttpRequest();
 		xhr.open("POST", url);
 		xhr.setRequestHeader("Content-type", "application/octet-stream");
 		xhr.onload = function() {
@@ -147,8 +146,7 @@ sendSessionData(){
         "dataTsVerifyOption": "IGNORE",
         "embedDataTs": "false",
         "dataToSignQualifier": "NOT_SIGNED_BEFORE",
-        "duplicateSign": "true",
-        "caId": "testIitCa"
+        "duplicateSign": "true"
         
     }
 
@@ -163,7 +161,7 @@ sendSessionData(){
       }).then((response) => {
         response.json().then((response) => {
           console.log(response);
-          this.sendKeyData();
+          this.verifyData();
         });
     });
   }
@@ -246,7 +244,7 @@ sendSessionData(){
 	                    <div className="col-10">
 	                        <h5 className="card-title">Verify</h5>
 	                        <input type="file" onChange={this.onChange} />
-	                        <input type="file" onChangeDS={this.onChangeDS} />
+	                        <input type="file" onChange={this.onChangeDS.bind(this)} />
 	                        <button  onClick={this.onFormSubmit}>Verify</button>
 	                    </div>
 	                    </div>
