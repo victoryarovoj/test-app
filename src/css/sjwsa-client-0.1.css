@@ -26,6 +26,7 @@
 body {
     color: #888888;
     min-width:1000px;
+    display:block;
 }
 
 .dl-horizontal dt {

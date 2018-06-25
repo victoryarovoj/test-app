@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CardBody from '../containers/CardBody'
 
 
 class Ts extends Component {
@@ -7,7 +8,7 @@ class Ts extends Component {
         return (
             <div className="container">
 	            <div className="row" style={{padding: "10px"}}>
-	                <span>verifyDS</span>
+	                <CardBody data={"ping"}/>
 	            </div>
 	        </div>
         );

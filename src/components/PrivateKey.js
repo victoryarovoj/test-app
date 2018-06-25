@@ -62,7 +62,11 @@ componentDidMount() {
 _renderSelect() {
 
     var optionsState = this.state.selectedKeyContainer
-    const arr = this.state.listCSK.ca;
+    var arr = [];
+    if (this.state.listCSK.ca !== undefined) {
+       arr = this.state.listCSK.ca;
+    }
+    
 
     function options(child, index) {
       
@@ -91,6 +95,7 @@ onFormSubmit() {
       // this.setState({privateKeyContainerPass:this.password.value})
       // this.setState({privateKeyFileContainer:this.state.file})
       this.props.actions.setKCValue(this.state.selectedKeyContainer, this.password.value, this.state.file)
+      this.getCertData()
   }
 
   onPassChange(e) {
@@ -105,6 +110,110 @@ onFormSubmit() {
     console.log("THE VAL", e.target.value);
     console.log("THE VAL", e.target.selectedIndex);
     this.props.actions.setSelectedContainer(e.target.value)
+}
+
+getCertData () {
+    var uid, urlKey, deleteSession, checkInfo, createSession,
+        url = this.state.baseUrl, sentKC, dsData, _this, urlSession,
+        pass = this.state.keyStorePassword, sendSessionData;
+
+    _this = this
+
+    deleteSession = function () {
+        return fetch(url + uid, {
+          method: "DELETE",
+          dataType: "json",
+          cache: "no-cache",
+        }).then((response) => {
+          response.json().then((response) => {
+            console.log(response);
+          });
+      });
+    }
+
+    sendSessionData = function (){
+      var selectedOptions, url;
+        selectedOptions = {
+          "signatureTsVerifyOption": "IGNORE",
+          "embedSignatureTs": "false",
+          "embedCertificateType": "NOTHING",
+          "signatureType": "DETACHED",
+          "dataTsVerifyOption": "IGNORE",
+          "embedDataTs": "false",
+          "dataToSignQualifier": "NOT_SIGNED_BEFORE",
+          "duplicateSign": "true",
+          "caId": "testIitCa"
+          
+      }
+
+      urlSession = "https://local.cipher.kiev.ua:9090/api/v1/ticket/" + uid + "/option";
+        return fetch(urlSession, {
+          method: 'PUT',
+          dataType: "json",
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(selectedOptions)
+        }).then((response) => {
+          response.json().then((response) => {
+            console.log(response);
+            sentKC();
+          });
+      });
+    }
+
+    checkInfo = function (){
+      var checkUrl = url + uid + "/keyStore/certificate/info/signature"
+
+      return fetch(checkUrl, {
+        method: 'PUT',
+        dataType: "json",
+        headers: {
+              'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({keyStorePassword: _this.password.value})
+      }).then((response) => {
+        console.log(response);
+        response.json().then((response) => {
+          console.log(response);
+          window.setTimeout(deleteSession, 2500);
+          // deleteSession();
+        });
+      });
+    }
+
+    sentKC = function (){
+      urlKey = url + uid +  "/keyStore"
+      var xhr = new XMLHttpRequest();
+      xhr.open("PUT", urlKey);
+      xhr.setRequestHeader("Content-type", "application/octet-stream");
+      xhr.onload = function() {
+        console.log(xhr);
+          if (xhr.status === 200) {
+            dsData = xhr.response;
+            checkInfo()
+            console.log(dsData);
+          }
+      };
+      xhr.send(_this.state.file);
+    }
+    
+
+    createSession = function (){
+      return fetch(url, {
+          method: 'POST',
+          dataType: "json"
+        },).then(response => {
+      if (response.ok) {
+          response.json().then(json => {
+            uid = json.ticketUuid;
+            console.log(json.message);
+            sendSessionData();
+          });
+        }
+      });
+    }
+    createSession();
 }
 
 createSession(){
